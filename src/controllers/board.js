@@ -1,11 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var Board = require('../models/board');
 
-const board = new Board();
-
-router.get('/', function(req, res) {
-    res.end(JSON.stringify(board));
+router.get('/:gameId', function(req, res) {
+    res.end(`This will fetch gameId ${req.params.gameId} someday`)
 });
 
 module.exports = router;
