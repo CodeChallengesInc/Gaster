@@ -1,12 +1,16 @@
 var express = require('express');
+var GameService = require('../services/game');
 var router = express.Router();
+var gameService = GameService.getInstance();
 
 router.post('/', function(req, res) {
-    res.end('This will create a new game someday');
+    const gameId = gameService.createGame();
+    res.end(gameId);
 });
 
 router.delete('/:gameId', function(req, res) {
-    res.end(`This will delete game ${req.params.gameId} someday`);
-})
+    gameService.deleteGame(req.params.gameId);
+    res.end();
+});
 
 module.exports = router;

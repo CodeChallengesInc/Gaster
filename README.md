@@ -14,8 +14,8 @@ example (2x2 grid):
 ```
 {
     "grid": [
-        ["red", "white"],
-        ["white", "green"]
+        [3, 0],
+        [0, 2]
     ],
     "ants": [
         { 
