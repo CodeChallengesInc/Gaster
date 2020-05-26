@@ -11,6 +11,7 @@ Response:
 - A board object
 
 example (2x2 grid):
+```
 {
     "grid": [
         ["red", "white"],
@@ -39,6 +40,7 @@ example (2x2 grid):
         }
     ]
 }
+```
 
 ### game
 
@@ -75,6 +77,8 @@ Response:
 - config object
 
 example:
+```
 {
     "ticksPerSecond": 10
 }
+```
