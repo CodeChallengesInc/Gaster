@@ -3,6 +3,7 @@
 ### board
 
 GET:
+
 Request:
 - gameId (string)
 
@@ -42,6 +43,7 @@ example (2x2 grid):
 ### game
 
 POST:
+
 Request:
 N/A
 
@@ -52,6 +54,7 @@ Notes:
 Creates a new game. The gameId can be used to retrieve the current state of the game
 
 DELETE:
+
 Request:
 - gameId (string)
 
@@ -64,6 +67,7 @@ Used to stop a game currently in progress
 ### config
 
 GET:
+
 Request:
 N/A
 
