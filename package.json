@@ -1,0 +1,22 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "The backend for the ants game",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeChallengesInc/Backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CodeChallengesInc/Backend/issues"
+  },
+  "homepage": "https://github.com/CodeChallengesInc/Backend#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
