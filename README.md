@@ -1,26 +1,43 @@
 ## Spec
 
-### grid
+### board
 
 GET:
 Request:
 - gameId (string)
 
 Response:
-- A grid object
+- A board object
 
 example (2x2 grid):
-[
-    [
+{
+    "grid": [
+        ["red", "white"],
+        ["white", "green"]
+    ],
+    "ants": [
+        { 
+            "teamName": "My Cool Ant",
+            "column": 0,
+            "row": 1
+        },
         {
-            'color': 'red',
-
+            "teamName": "Another Ant",
+            "column": 1,
+            "row": 1
         }
     ],
-    [
-
+    "food": [
+        {
+            "column": 1,
+            "row": 0
+        },
+        {
+            "column": 0,
+            "row": 0
+        }
     ]
-]
+}
 
 ### game
 
