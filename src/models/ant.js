@@ -7,7 +7,7 @@ class Ant {
 
     doStep(view) {
         return {
-            cell: 4
+            cell: 5
         };
     }
 }

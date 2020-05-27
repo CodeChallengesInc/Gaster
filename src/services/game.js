@@ -21,18 +21,17 @@ class GameService {
         board.grid = this.generateGrid();
         board.ants = this.loadAnts();
         board.food = this.generateFood();
-        board.ants[0].doStep = this.dummyAntMethod;
         this.boards[uuid] = board;
-        console.log(board.getView(5, 5));
+        setInterval(() => this.tickBoard(board), 1000);
         return uuid;
     }
 
     tickBoard(board) {
-        // for (var ant in board.ants) {
-        //     const antView = board.getView(ant.row, ant.column);
-        //     const antResult = ant.doStep(antView);
-        //     board.updateBoard(antResult);
-        // }
+        board.ants.forEach(ant => {
+            const antView = board.getView(ant.row, ant.column);
+            const antAction = ant.doStep(antView.view);
+            board.updateBoard(antView, antAction, ant);
+        });
     }
 
     deleteGame(gameId) {
@@ -52,14 +51,48 @@ class GameService {
     }
 
     loadAnts() {
-        return Array(5).fill(new Ant());
+        const ants = [new Ant(), new Ant(), new Ant(), new Ant(), new Ant()];
+        ants[0].doStep = this.dummyAntMethod;
+        return ants;
     }
 
     dummyAntMethod(cells) {
-        return {
-            cell: 4,
-            color: 8
-        };
+        var foundIndex = -1;
+        cells.forEach((cell, i) => {
+            if (i !== 4 && cell.color === 8) {
+                foundIndex = i;
+                return;
+            }
+        });
+        if (cells[4].color === 1) {
+            return {
+                cell: 4,
+                color: 8
+            };
+        } else if (foundIndex >= 0) {
+            var opposite = 1;
+            switch (foundIndex) {
+                case 1:
+                    opposite = 7;
+                    break;
+                case 7:
+                    opposite = 1;
+                    break;
+                case 3:
+                    opposite = 5;
+                    break;
+                case 5:
+                    opposite = 3;
+                    break;
+            }
+            return {
+                cell: opposite
+            };
+        } else {
+            return {
+                cell: 1
+            };
+        }
     }
 
     generateFood() {
@@ -67,7 +100,8 @@ class GameService {
         const food = [];
 
         for (var _ of Array(numFood).keys()) {
-            const newFood = new Food()
+            const newFood = new Food();
+            // Make sure not to generate food on top of already generated food
             do {
                 newFood.column = Math.floor(Math.random() * GRID_WIDTH);
                 newFood.row = Math.floor(Math.random() * GRID_HEIGHT);
