@@ -1,10 +1,9 @@
 var Board = require('../models/board')
 var Food = require('../models/food');
-var Ant = require('../models/ant');
 
 const GRID_WIDTH = 25;
 const GRID_HEIGHT = 10;
-const FOOD_PERCENTAGE = 0.001;
+const FOOD_PERCENTAGE = 0.1;
 
 var instance = undefined;
 
@@ -20,11 +19,11 @@ class GameService {
         var AntLoaderService = require('./ant-loader');
         var antLoader = AntLoaderService.getInstance();
 
-        
-
         const uuid = this.uuid.v4();
         var board = new Board();
         const ants = antLoader.loadAnts();
+        
+        // Randomize ant starting position
         ants.forEach(ant => {
             ant.row = Math.floor(Math.random() * GRID_HEIGHT);
             ant.column = Math.floor(Math.random() * GRID_WIDTH);
@@ -39,9 +38,25 @@ class GameService {
 
     tickBoard(board) {
         board.ants.forEach(ant => {
+            // Let the ant run its function, then update board based on result
             const antView = board.getView(ant.row, ant.column);
             const antAction = ant.doStep(antView.view);
             board.updateBoard(antView, antAction, ant);
+
+            // Check for ant walking on food
+            var toRemove = -1;
+            board.food.forEach((food, i) => {
+                if (food.row === ant.row && food.column === ant.column) {
+                    toRemove = i;
+                    ant.score++;
+                    return;
+                }
+            });
+
+            // Only remove food if we found one to remove
+            if (toRemove >= 0) {
+                board.food.splice(toRemove, 1);
+            }
         });
     }
 

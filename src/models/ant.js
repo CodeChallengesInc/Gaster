@@ -3,6 +3,7 @@ class Ant {
         this.teamName = 'Default name';
         this.column = 0;
         this.row = 0;
+        this.score = 0;
     }
 
     doStep(view) {
