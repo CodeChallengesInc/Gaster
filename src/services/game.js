@@ -16,10 +16,21 @@ class GameService {
     }
 
     createGame() {
+
+        var AntLoaderService = require('./ant-loader');
+        var antLoader = AntLoaderService.getInstance();
+
+        
+
         const uuid = this.uuid.v4();
         var board = new Board();
+        const ants = antLoader.loadAnts();
+        ants.forEach(ant => {
+            ant.row = Math.floor(Math.random() * GRID_HEIGHT);
+            ant.column = Math.floor(Math.random() * GRID_WIDTH);
+        })
         board.grid = this.generateGrid();
-        board.ants = this.loadAnts();
+        board.ants = ants;
         board.food = this.generateFood();
         this.boards[uuid] = board;
         setInterval(() => this.tickBoard(board), 1000);
@@ -48,51 +59,6 @@ class GameService {
             newGrid[row] = Array(GRID_WIDTH).fill(1);
         }
         return newGrid;
-    }
-
-    loadAnts() {
-        const ants = [new Ant(), new Ant(), new Ant(), new Ant(), new Ant()];
-        ants[0].doStep = this.dummyAntMethod;
-        return ants;
-    }
-
-    dummyAntMethod(cells) {
-        var foundIndex = -1;
-        cells.forEach((cell, i) => {
-            if (i !== 4 && cell.color === 8) {
-                foundIndex = i;
-                return;
-            }
-        });
-        if (cells[4].color === 1) {
-            return {
-                cell: 4,
-                color: 8
-            };
-        } else if (foundIndex >= 0) {
-            var opposite = 1;
-            switch (foundIndex) {
-                case 1:
-                    opposite = 7;
-                    break;
-                case 7:
-                    opposite = 1;
-                    break;
-                case 3:
-                    opposite = 5;
-                    break;
-                case 5:
-                    opposite = 3;
-                    break;
-            }
-            return {
-                cell: opposite
-            };
-        } else {
-            return {
-                cell: 1
-            };
-        }
     }
 
     generateFood() {
