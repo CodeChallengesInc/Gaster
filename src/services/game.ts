@@ -1,6 +1,7 @@
 import { Ant } from "../models/ant";
 import { Board } from '../models/board';
 import { Food } from "../models/food";
+import { AntLoaderService } from "./ant-loader";
 
 const GRID_WIDTH = 25;
 const GRID_HEIGHT = 10;
@@ -15,7 +16,6 @@ export class GameService {
     createGame() {
 
         const uuidService = require('uuid');
-        var AntLoaderService = require('./ant-loader');
         var antLoader = AntLoaderService.getInstance();
 
         const uuid: string = uuidService.v4();

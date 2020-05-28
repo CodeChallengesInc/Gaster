@@ -4,7 +4,7 @@ const antsDirectory = './ants'
 
 var instance: AntLoaderService | undefined = undefined;
 
-class AntLoaderService {
+export class AntLoaderService {
     
     loadAnts(): Ant[] {
         const path = require('path');

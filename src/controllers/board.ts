@@ -12,3 +12,5 @@ router.get('/:gameId', (req: Request, res: Response) => {
     }
     res.end(JSON.stringify(board));
 });
+
+module.exports = router;

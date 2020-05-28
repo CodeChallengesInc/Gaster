@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
+import { GameService } from '../services/game';
 
 var express = require('express');
-var GameService = require('../services/game');
 var router = express.Router();
 var gameService = GameService.getInstance();
 
