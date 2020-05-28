@@ -1,4 +1,4 @@
-import { AntView } from "./ant-view";
+import { AntView } from './ant-view';
 
 export interface BoardView {
     view: AntView[];
