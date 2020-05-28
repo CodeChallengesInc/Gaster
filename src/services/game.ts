@@ -1,27 +1,26 @@
-var Board = require('../models/board')
-var Food = require('../models/food');
+import { Ant } from "../models/ant";
+import { Board } from '../models/board';
+import { Food } from "../models/food";
 
 const GRID_WIDTH = 25;
 const GRID_HEIGHT = 10;
 const FOOD_PERCENTAGE = 0.1;
 
-var instance = undefined;
+var instance: GameService | undefined = undefined;
 
-class GameService {
+export class GameService {
 
-    constructor() {
-        this.uuid = require('uuid');
-        this.boards = {};
-    }
+    boards: any = {};
 
     createGame() {
 
+        const uuidService = require('uuid');
         var AntLoaderService = require('./ant-loader');
         var antLoader = AntLoaderService.getInstance();
 
-        const uuid = this.uuid.v4();
+        const uuid: string = uuidService.v4();
         var board = new Board();
-        const ants = antLoader.loadAnts();
+        const ants: Ant[] = antLoader.loadAnts();
         
         // Randomize ant starting position
         ants.forEach(ant => {
@@ -36,7 +35,7 @@ class GameService {
         return uuid;
     }
 
-    tickBoard(board) {
+    tickBoard(board: Board) {
         board.ants.forEach(ant => {
             // Let the ant run its function, then update board based on result
             const antView = board.getView(ant.row, ant.column);
@@ -60,11 +59,11 @@ class GameService {
         });
     }
 
-    deleteGame(gameId) {
+    deleteGame(gameId: string) {
         this.boards[gameId] = undefined;
     }
 
-    getBoard(gameId) {
+    getBoard(gameId: string) {
         return this.boards[gameId];
     }
 
@@ -78,10 +77,13 @@ class GameService {
 
     generateFood() {
         const numFood = Math.floor(GRID_WIDTH * GRID_HEIGHT * FOOD_PERCENTAGE);
-        const food = [];
+        const food: Food[] = [];
 
-        for (var _ of Array(numFood).keys()) {
-            const newFood = new Food();
+        for (var _ of Array(numFood)) {
+            const newFood = {
+                column: 0,
+                row: 0
+            };
             // Make sure not to generate food on top of already generated food
             do {
                 newFood.column = Math.floor(Math.random() * GRID_WIDTH);
@@ -101,5 +103,3 @@ class GameService {
         return instance;
     }
 }
-
-module.exports = GameService;

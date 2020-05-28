@@ -1,22 +1,26 @@
-var Ant = require('../models/ant');
+import { Ant } from "../models/ant";
 
 const antsDirectory = './ants'
 
-var instance = undefined;
+var instance: AntLoaderService | undefined = undefined;
 
 class AntLoaderService {
     
-    loadAnts() {
+    loadAnts(): Ant[] {
         const path = require('path');
         const fs = require('fs');
 
-        const ants = [];
+        const ants: Ant[] = [];
         const files = fs.readdirSync(antsDirectory);
-        files.forEach(file => {
+        files.forEach((file: any) => {
             const data = fs.readFileSync(path.join(antsDirectory, file));
-            const newAnt = new Ant();
-            newAnt.teamName = file;
-            newAnt.doStep = new Function('view', data.toString());
+            const newAnt = {
+                teamName: file,
+                column: 0,
+                row: 0,
+                score: 0,
+                doStep: new Function('view', data.toString())
+            };
             ants.push(newAnt);
         })
         return ants;
@@ -30,5 +34,3 @@ class AntLoaderService {
         return instance;
     }
 }
-
-module.exports = AntLoaderService;

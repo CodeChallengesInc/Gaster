@@ -1,11 +1,15 @@
-class Board {
-    constructor() {
-        this.grid = [];
-        this.ants = [];
-        this.food = [];
-    }
+import { AntView } from './ant-view';
+import { BoardView } from './board-view';
+import { AntAction } from "./ant-action";
+import { Ant } from "./ant"
+import { Food } from './food';
 
-    updateBoard(view, antAction, ant) {
+export class Board {
+    grid: number[][] = [];
+    ants: Ant[] = [];
+    food: Food[] = [];
+
+    updateBoard(view: BoardView, antAction: AntAction, ant: Ant) {
         const target = view.tiles[antAction.cell];
         const targetRow = target[0];
         const targetCol = target[1];
@@ -19,7 +23,7 @@ class Board {
         }
     }
 
-    getView(row, col) {
+    getView(row: number, col: number): BoardView {
         const tiles = this.randomizeRotation([
             [this.up(row), this.left(col)],
             [this.up(row), col],
@@ -32,7 +36,7 @@ class Board {
             [this.down(row), this.right(col)]
         ]);
 
-        const view = [];
+        const view: AntView[] = [];
         const grid = this.grid;
         const food = this.food;
         tiles.forEach(tile => {
@@ -54,7 +58,7 @@ class Board {
         };
     }
 
-    left(col) {
+    private left(col: number): number {
         if (col === 0) {
             return this.grid[0].length - 1;
         } else {
@@ -62,7 +66,7 @@ class Board {
         }
     }
 
-    right(col) {
+    private right(col: number): number {
         if (col >= this.grid[0].length - 1) {
             return 0;
         } else {
@@ -70,7 +74,7 @@ class Board {
         }
     }
 
-    up(row) {
+    private up(row: number): number {
         if (row === 0) {
             return this.grid.length - 1;
         } else {
@@ -78,7 +82,7 @@ class Board {
         }
     }
 
-    down(row) {
+    private down(row: number): number {
         if (row >= this.grid.length - 1) {
             return 0;
         } else {
@@ -87,12 +91,10 @@ class Board {
     }
 
     // Tiles come to the ants rotated 0, 90, 180, or 270 degrees
-    randomizeRotation(tiles) {
+    private randomizeRotation(tiles: number[][]): number[][] {
         const random = Math.floor(Math.random() * 4);
 
         switch (random) {
-            case 0:
-                return tiles;
             case 1:
                 return [
                     tiles[6], tiles[3], tiles[0],
@@ -111,8 +113,8 @@ class Board {
                     tiles[1], tiles[4], tiles[7],
                     tiles[0], tiles[3], tiles[6]
                 ];
+            default:
+                return tiles;
         }
     }
 }
-
-module.exports = Board;
