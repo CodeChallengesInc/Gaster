@@ -1,6 +1,8 @@
+const antColor = 5;
+
 var foundIndex = -1;
 view.forEach((cell, i) => {
-    if (i !== 4 && cell.color === 8) {
+    if (i !== 4 && cell.color === antColor) {
         foundIndex = i;
         return;
     }
@@ -8,7 +10,7 @@ view.forEach((cell, i) => {
 if (view[4].color === 1) {
     return {
         cell: 4,
-        color: 8
+        color: antColor
     };
 } else if (foundIndex >= 0) {
     var opposite = 1;
