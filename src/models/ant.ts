@@ -1,5 +1,5 @@
 export interface Ant {
-    teamName: string;
+    antName: string;
     column: number;
     row: number;
     score: number;

@@ -14,7 +14,7 @@ export class AntLoaderService {
     files.forEach((file: any) => {
       const data = fs.readFileSync(path.join(antsDirectory, file));
       const newAnt = {
-        teamName: file,
+        antName: path.basename(file, path.extname(file)),
         column: 0,
         row: 0,
         score: 0,
