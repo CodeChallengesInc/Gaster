@@ -4,5 +4,6 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 COPY . .
+RUN mkdir /ants
 EXPOSE 3000
-CMD ["node", "src/app.js"]
+CMD ["npm", "run app"]
