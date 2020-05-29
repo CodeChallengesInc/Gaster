@@ -6,4 +6,5 @@ RUN npm install
 COPY . .
 RUN mkdir /ants
 EXPOSE 3000
-CMD ["npm", "run app"]
+RUN npm run tsc
+CMD ["node", "./build/app.js"]
