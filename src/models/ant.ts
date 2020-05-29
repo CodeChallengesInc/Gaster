@@ -3,6 +3,8 @@ export interface Ant {
     column: number;
     row: number;
     score: number;
+    error: string | undefined;
+    color: string;
 
     doStep: Function
 }
