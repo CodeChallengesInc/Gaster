@@ -9,7 +9,7 @@ export class AntLoaderService {
     const path = require('path');
     const fs = require('fs');
 
-    const ants: Ant[] = [];
+    var ants: Ant[] = [];
     const files = fs.readdirSync(antsDirectory);
     files.forEach((file: any) => {
       const data = fs.readFileSync(path.join(antsDirectory, file));
@@ -34,7 +34,10 @@ export class AntLoaderService {
 
       ants.push(newAnt);
     });
-    return ants;
+
+    ants = this.shuffle(ants);
+
+    return ants.slice(0, 10);
   }
 
   private generateColor(antName: string) {
@@ -68,6 +71,18 @@ export class AntLoaderService {
   private colorToHex(c: number) {
     const hex = c.toString(16);
     return hex.length === 1 ? `0${hex}` : hex;
+  }
+
+  // From: https://stackoverflow.com/a/6274381
+  private shuffle(array: any[]) {
+    var j, x, i;
+    for (i = array.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      x = array[i];
+      array[i] = array[j];
+      array[j] = x;
+    }
+    return array;
   }
 
   static getInstance() {
