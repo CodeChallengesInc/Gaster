@@ -5,9 +5,9 @@ import { AntLoaderService } from './ant-loader';
 import { AntAction } from '../models/ant-action';
 import { Game } from '../models/game';
 
-const GRID_WIDTH = 250;
-const GRID_HEIGHT = 100;
-const FOOD_PERCENTAGE = 0.01;
+const GRID_WIDTH = 50;
+const GRID_HEIGHT = 20;
+const FOOD_PERCENTAGE = 0.1;
 const MAX_TICKS = 1000;
 const TICKS_PER_SECOND = 2;
 
