@@ -5,11 +5,11 @@ import { AntLoaderService } from './ant-loader';
 import { AntAction } from '../models/ant-action';
 import { Game } from '../models/game';
 
-const GRID_WIDTH = 50;
-const GRID_HEIGHT = 20;
-const FOOD_PERCENTAGE = 0.1;
+const GRID_WIDTH = +(process.env.GRID_WIDTH || 50);
+const GRID_HEIGHT = +(process.env.GRID_HEIGHT || 20);
+const FOOD_PERCENTAGE = +(process.env.FOOD_PERCENTAGE || 0.1);
 const MAX_TICKS = 1000;
-const TICKS_PER_SECOND = 2;
+export const TICKS_PER_SECOND = +(process.env.TICKS_PER_SECOND || 2);
 
 var instance: GameService | undefined;
 
