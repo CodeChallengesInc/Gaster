@@ -8,6 +8,7 @@ export class Board {
     grid: number[][] = [];
     ants: Ant[] = [];
     food: Food[] = [];
+    elapsedTicks = 0;
 
     updateBoard(view: BoardView, antAction: AntAction, ant: Ant) {
       const target = view.tiles[antAction.cell];

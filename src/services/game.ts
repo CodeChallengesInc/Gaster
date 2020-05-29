@@ -3,15 +3,18 @@ import { Board } from '../models/board';
 import { Food } from '../models/food';
 import { AntLoaderService } from './ant-loader';
 import { AntAction } from '../models/ant-action';
+import { Game } from '../models/game';
 
-const GRID_WIDTH = 25;
-const GRID_HEIGHT = 10;
-const FOOD_PERCENTAGE = 0.1;
+const GRID_WIDTH = 250;
+const GRID_HEIGHT = 100;
+const FOOD_PERCENTAGE = 0.01;
+const MAX_TICKS = 1000;
+const TICKS_PER_SECOND = 2;
 
 var instance: GameService | undefined;
 
 export class GameService {
-    boards: any = {};
+    games: any = {};
 
     createGame() {
       const uuidService = require('uuid');
@@ -29,12 +32,18 @@ export class GameService {
       board.grid = this.generateGrid();
       board.ants = ants;
       board.food = this.generateFood();
-      this.boards[uuid] = board;
-      setInterval(() => this.tickBoard(board), 1000);
+      const game: any = {
+        board,
+        intervalId: undefined
+      };
+      game.intervalId = setInterval(() => this.tickGame(game), 1000 / TICKS_PER_SECOND);
+      this.games[uuid] = game;
+
       return uuid;
     }
 
-    tickBoard(board: Board) {
+    tickGame(game: Game) {
+      const board = game.board;
       board.ants.filter(ant => !ant.error).forEach(ant => {
         // Let the ant run its function, then update board based on result
         const antView = board.getView(ant.row, ant.column);
@@ -67,6 +76,11 @@ export class GameService {
           }
         }
       });
+
+      board.elapsedTicks++;
+      if (board.elapsedTicks >= MAX_TICKS || board.food.length <= 0) {
+        this.stopGame(game);
+      }
     }
 
     private checkErrors(antAction: AntAction | undefined) {
@@ -83,12 +97,20 @@ export class GameService {
       return undefined;
     }
 
+    private stopGame(game: Game) {
+      clearInterval(game.intervalId);
+    }
+
     deleteGame(gameId: string) {
-      this.boards[gameId] = undefined;
+      this.stopGame(this.games[gameId]);
+      this.games[gameId] = undefined;
     }
 
     getBoard(gameId: string) {
-      return this.boards[gameId];
+      if (!this.games[gameId]) {
+        return undefined;
+      }
+      return this.games[gameId].board;
     }
 
     generateGrid() {
