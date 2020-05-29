@@ -2,6 +2,7 @@ import { Ant } from '../models/ant';
 import { Board } from '../models/board';
 import { Food } from '../models/food';
 import { AntLoaderService } from './ant-loader';
+import { AntAction } from '../models/ant-action';
 
 const GRID_WIDTH = 25;
 const GRID_HEIGHT = 10;
@@ -34,28 +35,52 @@ export class GameService {
     }
 
     tickBoard(board: Board) {
-      board.ants.forEach(ant => {
+      board.ants.filter(ant => !ant.error).forEach(ant => {
         // Let the ant run its function, then update board based on result
         const antView = board.getView(ant.row, ant.column);
-        const antAction = ant.doStep(antView.view);
-        board.updateBoard(antView, antAction, ant);
 
-        // Check for ant walking on food
-        var toRemove = -1;
-        for (var i = 0; i < board.food.length; i++) {
-          const food = board.food[i];
-          if (food.row === ant.row && food.column === ant.column) {
-            toRemove = i;
-            ant.score++;
-            break;
+        var antAction: AntAction | undefined;
+        try {
+          antAction = ant.doStep(antView.view);
+          ant.error = this.checkErrors(antAction);
+        } catch (error) {
+          ant.error = error.toString();
+        }
+
+        if (!ant.error && antAction) {
+          board.updateBoard(antView, antAction, ant);
+
+          // Check for ant walking on food
+          var toRemove = -1;
+          for (var i = 0; i < board.food.length; i++) {
+            const food = board.food[i];
+            if (food.row === ant.row && food.column === ant.column) {
+              toRemove = i;
+              ant.score++;
+              break;
+            }
+          }
+
+          // Only remove food if we found one to remove
+          if (toRemove >= 0) {
+            board.food.splice(toRemove, 1);
           }
         }
-
-        // Only remove food if we found one to remove
-        if (toRemove >= 0) {
-          board.food.splice(toRemove, 1);
-        }
       });
+    }
+
+    private checkErrors(antAction: AntAction | undefined) {
+      if (!antAction) {
+        return 'Ant did not return an ant action';
+      } else if (!antAction.cell) {
+        return 'Ant did not return a cell';
+      } else if (!Number.isInteger(antAction.cell) || antAction.cell < 0 || antAction.cell > 8) {
+        return `Cell number '${antAction.cell}' is not valid`;
+      } else if (antAction.color && (!Number.isInteger(antAction.color) || antAction.color < 1 || antAction.color > 8)) {
+        return `Color '${antAction.color}' is not valid`;
+      }
+
+      return undefined;
     }
 
     deleteGame(gameId: string) {

@@ -1,4 +1,4 @@
 export interface AntAction {
     cell: number;
-    color: number;
+    color: number | undefined;
 }
