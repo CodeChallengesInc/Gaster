@@ -1,3 +1,5 @@
+import { Request, Response } from 'express';
+
 var express = require('express');
 var app = express();
 
@@ -6,6 +8,12 @@ var board = require('./controllers/board');
 var game = require('./controllers/game');
 
 const port = 3000;
+
+app.use((req: Request, res: Response, next: any) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  next();
+});
 
 app.use('/config', config);
 app.use('/board', board);
