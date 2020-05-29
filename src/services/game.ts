@@ -86,7 +86,7 @@ export class GameService {
     private checkErrors(antAction: AntAction | undefined) {
       if (!antAction) {
         return 'Ant did not return an ant action';
-      } else if (!antAction.cell) {
+      } else if (antAction.cell === undefined) {
         return 'Ant did not return a cell';
       } else if (!Number.isInteger(antAction.cell) || antAction.cell < 0 || antAction.cell > 8) {
         return `Cell number '${antAction.cell}' is not valid`;
