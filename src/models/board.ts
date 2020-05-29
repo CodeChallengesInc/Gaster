@@ -59,35 +59,19 @@ export class Board {
     }
 
     private left(col: number): number {
-      if (col === 0) {
-        return this.grid[0].length - 1;
-      } else {
-        return col - 1;
-      }
+      return (col - 1 + this.grid[0].length) % this.grid[0].length;
     }
 
     private right(col: number): number {
-      if (col >= this.grid[0].length - 1) {
-        return 0;
-      } else {
-        return col + 1;
-      }
+      return (col + 1) % this.grid[0].length;
     }
 
     private up(row: number): number {
-      if (row === 0) {
-        return this.grid.length - 1;
-      } else {
-        return row - 1;
-      }
+      return (row - 1 + this.grid.length) % this.grid.length;
     }
 
     private down(row: number): number {
-      if (row >= this.grid.length - 1) {
-        return 0;
-      } else {
-        return row + 1;
-      }
+      return (row + 1) % this.grid.length;
     }
 
     // Tiles come to the ants rotated 0, 90, 180, or 270 degrees
