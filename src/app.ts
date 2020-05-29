@@ -11,6 +11,7 @@ const port = 3000;
 
 app.use((req: Request, res: Response, next: any) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', '*');
 
   next();
 });
