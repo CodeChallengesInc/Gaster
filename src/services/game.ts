@@ -11,8 +11,8 @@ const FOOD_PERCENTAGE = +(process.env.FOOD_PERCENTAGE || 0.1);
 const MAX_TICKS = 1000;
 export const TICKS_PER_SECOND = +(process.env.TICKS_PER_SECOND || 2);
 
-const TEST_GRID_WIDTH = 100;
-const TEST_GRID_HEIGHT = 50;
+const TEST_GRID_WIDTH = 60;
+const TEST_GRID_HEIGHT = 40;
 const TEST_TICKS_PER_SECOND = 1;
 
 var instance: GameService | undefined;
