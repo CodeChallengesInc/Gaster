@@ -71,6 +71,7 @@ Used to stop a game currently in progress
 POST:
 
 Request:
+- antName (string)
 - code (string)
 
 Response:

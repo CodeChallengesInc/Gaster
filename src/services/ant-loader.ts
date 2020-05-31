@@ -40,8 +40,7 @@ export class AntLoaderService {
     return ants.slice(0, 10);
   }
 
-  loadTestAnt(body: string): Ant {
-    const antName = 'Test Ant';
+  loadTestAnt(antName: string, code: string): Ant {
     const newAnt: Ant = {
       antName,
       column: 0,
@@ -55,7 +54,7 @@ export class AntLoaderService {
 
     try {
       // eslint-disable-next-line no-new-func
-      newAnt.doStep = new Function('view', body);
+      newAnt.doStep = new Function('view', code);
     } catch (error) {
       newAnt.error = error.toString();
     }

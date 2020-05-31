@@ -5,8 +5,8 @@ import { AntLoaderService } from './ant-loader';
 import { AntAction } from '../models/ant-action';
 import { Game } from '../models/game';
 
-const GRID_WIDTH = +(process.env.GRID_WIDTH || 50);
-const GRID_HEIGHT = +(process.env.GRID_HEIGHT || 20);
+const GRID_WIDTH = +(process.env.GRID_WIDTH || 200);
+const GRID_HEIGHT = +(process.env.GRID_HEIGHT || 80);
 const FOOD_PERCENTAGE = +(process.env.FOOD_PERCENTAGE || 0.1);
 const MAX_TICKS = 1000;
 export const TICKS_PER_SECOND = +(process.env.TICKS_PER_SECOND || 2);
@@ -42,13 +42,13 @@ export class GameService {
       return uuid;
     }
 
-    createTestGame(body: string): string {
+    createTestGame(antName: string, code: string): string {
       const uuidService = require('uuid');
       var antLoader = AntLoaderService.getInstance();
 
       const uuid: string = uuidService.v4();
       var board = new Board();
-      const ant = antLoader.loadTestAnt(body);
+      const ant = antLoader.loadTestAnt(antName, code);
 
       // Randomize ant starting position
       ant.row = Math.floor(Math.random() * GRID_HEIGHT);
