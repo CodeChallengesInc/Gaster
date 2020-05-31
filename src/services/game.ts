@@ -42,6 +42,30 @@ export class GameService {
       return uuid;
     }
 
+    createTestGame(body: string): string {
+      const uuidService = require('uuid');
+      var antLoader = AntLoaderService.getInstance();
+
+      const uuid: string = uuidService.v4();
+      var board = new Board();
+      const ant = antLoader.loadTestAnt(body);
+
+      // Randomize ant starting position
+      ant.row = Math.floor(Math.random() * GRID_HEIGHT);
+      ant.column = Math.floor(Math.random() * GRID_WIDTH);
+      board.grid = this.generateGrid();
+      board.ants = [ant];
+      board.food = this.generateFood();
+      const game: any = {
+        board,
+        intervalId: undefined
+      };
+      game.intervalId = setInterval(() => this.tickGame(game), 1000 / TICKS_PER_SECOND);
+      this.games[uuid] = game;
+
+      return uuid;
+    }
+
     tickGame(game: Game) {
       const board = game.board;
       board.ants.filter(ant => !ant.error).forEach(ant => {
