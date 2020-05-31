@@ -13,7 +13,7 @@ export const TICKS_PER_SECOND = +(process.env.TICKS_PER_SECOND || 2);
 
 const TEST_GRID_WIDTH = 100;
 const TEST_GRID_HEIGHT = 50;
-export const TEST_TICKS_PER_SECOND = 1;
+const TEST_TICKS_PER_SECOND = 1;
 
 var instance: GameService | undefined;
 
@@ -35,7 +35,7 @@ export class GameService {
       });
       board.grid = this.generateGrid(GRID_HEIGHT, GRID_WIDTH);
       board.ants = ants;
-      board.food = this.generateFood();
+      board.food = this.generateFood(GRID_HEIGHT, GRID_WIDTH);
       const game: any = {
         board,
         intervalId: undefined
@@ -59,7 +59,7 @@ export class GameService {
       ant.column = Math.floor(Math.random() * TEST_GRID_WIDTH);
       board.grid = this.generateGrid(TEST_GRID_HEIGHT, TEST_GRID_WIDTH);
       board.ants = [ant];
-      board.food = this.generateFood();
+      board.food = this.generateFood(TEST_GRID_HEIGHT, TEST_GRID_WIDTH);
       const game: any = {
         board,
         intervalId: undefined
@@ -149,8 +149,8 @@ export class GameService {
       return newGrid;
     }
 
-    generateFood() {
-      const numFood = Math.floor(GRID_WIDTH * GRID_HEIGHT * FOOD_PERCENTAGE);
+    generateFood(height: number, width: number) {
+      const numFood = Math.floor(width * height * FOOD_PERCENTAGE);
       const food: Food[] = [];
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -161,8 +161,8 @@ export class GameService {
         };
         // Make sure not to generate food on top of already generated food
         do {
-          newFood.column = Math.floor(Math.random() * GRID_WIDTH);
-          newFood.row = Math.floor(Math.random() * GRID_HEIGHT);
+          newFood.column = Math.floor(Math.random() * width);
+          newFood.row = Math.floor(Math.random() * height);
         } while (food.find(item => item.column === newFood.column && item.row === newFood.row));
         food.push(newFood);
       }
