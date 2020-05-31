@@ -11,6 +11,10 @@ const FOOD_PERCENTAGE = +(process.env.FOOD_PERCENTAGE || 0.1);
 const MAX_TICKS = 1000;
 export const TICKS_PER_SECOND = +(process.env.TICKS_PER_SECOND || 2);
 
+const TEST_GRID_WIDTH = 100;
+const TEST_GRID_HEIGHT = 50;
+export const TEST_TICKS_PER_SECOND = 1;
+
 var instance: GameService | undefined;
 
 export class GameService {
@@ -29,7 +33,7 @@ export class GameService {
         ant.row = Math.floor(Math.random() * GRID_HEIGHT);
         ant.column = Math.floor(Math.random() * GRID_WIDTH);
       });
-      board.grid = this.generateGrid();
+      board.grid = this.generateGrid(GRID_HEIGHT, GRID_WIDTH);
       board.ants = ants;
       board.food = this.generateFood();
       const game: any = {
@@ -51,16 +55,16 @@ export class GameService {
       const ant = antLoader.loadTestAnt(antName, code);
 
       // Randomize ant starting position
-      ant.row = Math.floor(Math.random() * GRID_HEIGHT);
-      ant.column = Math.floor(Math.random() * GRID_WIDTH);
-      board.grid = this.generateGrid();
+      ant.row = Math.floor(Math.random() * TEST_GRID_HEIGHT);
+      ant.column = Math.floor(Math.random() * TEST_GRID_WIDTH);
+      board.grid = this.generateGrid(TEST_GRID_HEIGHT, TEST_GRID_WIDTH);
       board.ants = [ant];
       board.food = this.generateFood();
       const game: any = {
         board,
         intervalId: undefined
       };
-      game.intervalId = setInterval(() => this.tickGame(game), 1000 / TICKS_PER_SECOND);
+      game.intervalId = setInterval(() => this.tickGame(game), 1000 / TEST_TICKS_PER_SECOND);
       this.games[uuid] = game;
 
       return uuid;
@@ -137,10 +141,10 @@ export class GameService {
       return this.games[gameId].board;
     }
 
-    generateGrid() {
-      const newGrid = Array(GRID_HEIGHT).fill([]);
-      for (var row = 0; row < GRID_HEIGHT; row++) {
-        newGrid[row] = Array(GRID_WIDTH).fill(1);
+    generateGrid(height: number, width: number) {
+      const newGrid = Array(height).fill([]);
+      for (var row = 0; row < height; row++) {
+        newGrid[row] = Array(width).fill(1);
       }
       return newGrid;
     }
