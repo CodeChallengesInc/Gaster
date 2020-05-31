@@ -11,10 +11,10 @@ router.use(bodyParser.json());
 
 router.post('/', (req: Request, res: Response) => {
   if (req.body?.code) {
-    const gameId = gameService.createTestGame(req.body?.code);
+    const gameId = gameService.createTestGame(req.body.code);
     res.end(gameId);
   }
-  res.end('error' + JSON.stringify(req.params) + JSON.stringify(req.body));
+  res.end();
 });
 
 module.exports = router;
