@@ -66,6 +66,19 @@ N/A
 Notes:
 Used to stop a game currently in progress
 
+### test
+
+POST:
+
+Request:
+- code (string)
+
+Response:
+- gameId (string)
+
+Notes:
+Creates a new test game with 1 ant using the code that is passed in through the body of the request (should be a JSON object with a 'code' property). The gameId can be used to retrieve the current state of the game
+
 ### config
 
 GET:
