@@ -13,7 +13,9 @@ export class AntLoaderService {
     const files = fs.readdirSync(antsDirectory);
     files.forEach((file: any) => {
       const data = fs.readFileSync(path.join(antsDirectory, file));
-      const antName = path.basename(file, path.extname(file));
+      const fileName = path.basename(file, path.extname(file));
+      const username = fileName.substring(0, fileName.indexOf('_'));
+      const antName = fileName.substring(fileName.indexOf('_') + 1);
       const newAnt: Ant = {
         antName,
         column: 0,
@@ -21,6 +23,7 @@ export class AntLoaderService {
         score: 0,
         error: undefined,
         color: this.generateColor(antName),
+        creator: username,
         // eslint-disable-next-line no-new-func
         doStep: new Function('view', '')
       };
@@ -48,6 +51,7 @@ export class AntLoaderService {
       score: 0,
       error: undefined,
       color: this.generateColor(antName),
+      creator: 'Tester',
       // eslint-disable-next-line no-new-func
       doStep: new Function('view', '')
     };

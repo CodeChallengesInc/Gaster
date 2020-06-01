@@ -5,6 +5,7 @@ export interface Ant {
     score: number;
     error: string | undefined;
     color: string;
+    creator: string;
 
     doStep: Function
 }
