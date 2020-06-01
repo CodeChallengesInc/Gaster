@@ -51,6 +51,7 @@ export class AntLoaderService {
       score: 0,
       error: undefined,
       color: this.generateColor(antName),
+      creator: 'Tester',
       // eslint-disable-next-line no-new-func
       doStep: new Function('view', '')
     };
