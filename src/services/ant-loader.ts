@@ -4,6 +4,8 @@ const antsDirectory = './ants';
 
 var instance: AntLoaderService | undefined;
 
+const MAX_ANTS = +(process.env.MAX_ANTS || 10);
+
 export class AntLoaderService {
   loadAnts(): Ant[] {
     const path = require('path');
@@ -40,7 +42,7 @@ export class AntLoaderService {
 
     ants = this.shuffle(ants);
 
-    return ants.slice(0, 10);
+    return ants.slice(0, MAX_ANTS);
   }
 
   loadTestAnt(antName: string, code: string): Ant {

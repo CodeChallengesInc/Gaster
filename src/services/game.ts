@@ -7,8 +7,8 @@ import { Game } from '../models/game';
 
 const GRID_WIDTH = +(process.env.GRID_WIDTH || 200);
 const GRID_HEIGHT = +(process.env.GRID_HEIGHT || 80);
-const FOOD_PERCENTAGE = +(process.env.FOOD_PERCENTAGE || 0.1);
-const MAX_TICKS = 1000;
+const FOOD_PERCENTAGE = +(process.env.FOOD_PERCENTAGE || 0.05);
+const MAX_TICKS = +(process.env.MAX_TICKS || 1000);
 export const TICKS_PER_SECOND = +(process.env.TICKS_PER_SECOND || 2);
 
 const TEST_GRID_WIDTH = 60;

@@ -8,6 +8,15 @@ A typical use case would look like this:
 - Poll the GET endpoint based on the number of ticks retrieved from config, updating the UI each time
 - Consider DELETEing the game once it's over if you don't need to retain the results
 
+## Environment Configuration
+
+**GRID_WIDTH**: The width in tiles of the standard game grid. Defaults to 200.
+**GRID_HEIGHT**: The height in tiles of the standard game grid. Defaults to 80.
+**FOOD_PERCENTAGE**: The percentage of the grid that should be populated with food. Defaults to 0.05 (5%)
+**MAX_TICKS**: The number of ticks in a full game. Defaults to 1000.
+**TICKS_PER_SECOND**: The number of times the board updates per second. Defaults to 2.
+**MAX_ANTS**: The number of ants loaded into a challenge. Defaults to 10.
+
 ## API Spec
 
 ### **board**
