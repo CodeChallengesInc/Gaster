@@ -5,11 +5,15 @@ import { AntLoaderService } from './ant-loader';
 import { AntAction } from '../models/ant-action';
 import { Game } from '../models/game';
 
-const GRID_WIDTH = +(process.env.GRID_WIDTH || 50);
-const GRID_HEIGHT = +(process.env.GRID_HEIGHT || 20);
+const GRID_WIDTH = +(process.env.GRID_WIDTH || 200);
+const GRID_HEIGHT = +(process.env.GRID_HEIGHT || 80);
 const FOOD_PERCENTAGE = +(process.env.FOOD_PERCENTAGE || 0.1);
 const MAX_TICKS = 1000;
 export const TICKS_PER_SECOND = +(process.env.TICKS_PER_SECOND || 2);
+
+const TEST_GRID_WIDTH = 60;
+const TEST_GRID_HEIGHT = 40;
+const TEST_TICKS_PER_SECOND = 1;
 
 var instance: GameService | undefined;
 
@@ -29,14 +33,38 @@ export class GameService {
         ant.row = Math.floor(Math.random() * GRID_HEIGHT);
         ant.column = Math.floor(Math.random() * GRID_WIDTH);
       });
-      board.grid = this.generateGrid();
+      board.grid = this.generateGrid(GRID_HEIGHT, GRID_WIDTH);
       board.ants = ants;
-      board.food = this.generateFood();
+      board.food = this.generateFood(GRID_HEIGHT, GRID_WIDTH);
       const game: any = {
         board,
         intervalId: undefined
       };
       game.intervalId = setInterval(() => this.tickGame(game), 1000 / TICKS_PER_SECOND);
+      this.games[uuid] = game;
+
+      return uuid;
+    }
+
+    createTestGame(antName: string, code: string): string {
+      const uuidService = require('uuid');
+      var antLoader = AntLoaderService.getInstance();
+
+      const uuid: string = uuidService.v4();
+      var board = new Board();
+      const ant = antLoader.loadTestAnt(antName, code);
+
+      // Randomize ant starting position
+      ant.row = Math.floor(Math.random() * TEST_GRID_HEIGHT);
+      ant.column = Math.floor(Math.random() * TEST_GRID_WIDTH);
+      board.grid = this.generateGrid(TEST_GRID_HEIGHT, TEST_GRID_WIDTH);
+      board.ants = [ant];
+      board.food = this.generateFood(TEST_GRID_HEIGHT, TEST_GRID_WIDTH);
+      const game: any = {
+        board,
+        intervalId: undefined
+      };
+      game.intervalId = setInterval(() => this.tickGame(game), 1000 / TEST_TICKS_PER_SECOND);
       this.games[uuid] = game;
 
       return uuid;
@@ -113,16 +141,16 @@ export class GameService {
       return this.games[gameId].board;
     }
 
-    generateGrid() {
-      const newGrid = Array(GRID_HEIGHT).fill([]);
-      for (var row = 0; row < GRID_HEIGHT; row++) {
-        newGrid[row] = Array(GRID_WIDTH).fill(1);
+    generateGrid(height: number, width: number) {
+      const newGrid = Array(height).fill([]);
+      for (var row = 0; row < height; row++) {
+        newGrid[row] = Array(width).fill(1);
       }
       return newGrid;
     }
 
-    generateFood() {
-      const numFood = Math.floor(GRID_WIDTH * GRID_HEIGHT * FOOD_PERCENTAGE);
+    generateFood(height: number, width: number) {
+      const numFood = Math.floor(width * height * FOOD_PERCENTAGE);
       const food: Food[] = [];
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -133,8 +161,8 @@ export class GameService {
         };
         // Make sure not to generate food on top of already generated food
         do {
-          newFood.column = Math.floor(Math.random() * GRID_WIDTH);
-          newFood.row = Math.floor(Math.random() * GRID_HEIGHT);
+          newFood.column = Math.floor(Math.random() * width);
+          newFood.row = Math.floor(Math.random() * height);
         } while (food.find(item => item.column === newFood.column && item.row === newFood.row));
         food.push(newFood);
       }
