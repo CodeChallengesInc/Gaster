@@ -10,7 +10,7 @@ A typical use case would look like this:
 
 ## API Spec
 
-### board
+### **board**
 
 GET:
 
@@ -18,21 +18,15 @@ Request:
 
 /board/[gameId]
 
-**gameId**
+*gameId*
 - Guid string
 - Received from POST endpoint
 
 
 Response:
-- A board object
+- [Board object](#board-object)
 
-Example (2x2 grid):
-```
-{
-}
-```
-
-### game
+### **game**
 
 POST:
 
@@ -40,23 +34,23 @@ Request:
 N/A
 
 Response:
-- gameId (string)
+- gameId (guid string)
 
 Notes:
-Creates a new game. The gameId can be used to retrieve the current state of the game
+Creates a new game. The gameId can be used to retrieve the current state of the game. gameIds only become invalid after DELETE has been called on it. Games automatically start after this endpoint has been called
 
 DELETE:
 
 Request:
-- gameId (string)
+- gameId (guid string)
 
 Response:
 N/A
 
 Notes:
-Used to stop a game currently in progress
+Used to stop and delete a game currently in progress. Subsequent GETs to the game endpoint will fail for the given gameId.
 
-### test
+### **test**
 
 POST:
 
@@ -70,7 +64,7 @@ Response:
 Notes:
 Creates a new test game with 1 ant using the code that is passed in through the body of the request (should be a JSON object with a 'code' property). The gameId can be used to retrieve the current state of the game
 
-### config
+### **config**
 
 GET:
 
@@ -78,11 +72,11 @@ Request:
 N/A
 
 Response:
-- config object
+- [Config object](#config-object)
 
 ## Response Object Spec
 
-### Board
+### Board Object
 
 ```
 {
@@ -92,7 +86,7 @@ Response:
 }
 ```
 
-### Ant
+### Ant Object
 
 ```
 {
@@ -106,7 +100,7 @@ Response:
 }
 ```
 
-### Food
+### Food Object
 
 ```
 {
@@ -115,10 +109,10 @@ Response:
 }
 ```
 
-### Config
+### Config Object
 
 ```
 {
-    "ticksPerSecond": 10
+    "ticksPerSecond": 10  // How many times the game updates per second
 }
 ```
