@@ -1,44 +1,34 @@
-## Spec
+# Code Challenge Backend
+
+The backend allows users to create and run coding challenge games with participants submitted through the Submission API. So far the only game supposed is the Lone Ant challenge. 
+
+A typical use case would look like this:
+- Get the config to determine number of ticks, which allows clients to figure out how often to check the game's state
+- Create a game using the game POST endpoint
+- Poll the GET endpoint based on the number of ticks retrieved from config, updating the UI each time
+- Consider DELETEing the game once it's over if you don't need to retain the results
+
+## API Spec
 
 ### board
 
 GET:
 
 Request:
-- gameId (string)
+
+/board/[gameId]
+
+**gameId**
+- Guid string
+- Received from POST endpoint
+
 
 Response:
 - A board object
 
-example (2x2 grid):
+Example (2x2 grid):
 ```
 {
-    "grid": [
-        [3, 0],
-        [0, 2]
-    ],
-    "ants": [
-        { 
-            "teamName": "My Cool Ant",
-            "column": 0,
-            "row": 1
-        },
-        {
-            "teamName": "Another Ant",
-            "column": 1,
-            "row": 1
-        }
-    ],
-    "food": [
-        {
-            "column": 1,
-            "row": 0
-        },
-        {
-            "column": 0,
-            "row": 0
-        }
-    ]
 }
 ```
 
@@ -90,7 +80,43 @@ N/A
 Response:
 - config object
 
-example:
+## Response Object Spec
+
+### Board
+
+```
+{
+    "grid": number[][], // The grid of tiles, value is 1-8
+    "ants": Ant[],      // All the ants currently in the game
+    "food": Food[]      // All the food currently present on the board
+}
+```
+
+### Ant
+
+```
+{
+    "antName": string,  // The name of the ant as defined at creation time
+    "column": number,   // The column on the board the ant is at
+    "row": number,      // The row on the board the ant is at
+    "score": number,    // The current score of the ant, based on food picked up
+    "error": string,    // Any error the ant has. If this is true, the ant will no longer be able to play
+    "color": string,    // The color of the ant, assigned randomly based on the ant's name
+    "creator": string   // The creator of the ant
+}
+```
+
+### Food
+
+```
+{
+    "column": number,   // The column on the board the food is at
+    "row": number,      // The row on the board the food is at
+}
+```
+
+### Config
+
 ```
 {
     "ticksPerSecond": 10
