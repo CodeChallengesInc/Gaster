@@ -40,6 +40,27 @@ export class AntLoaderService {
     return ants.slice(0, 10);
   }
 
+  loadTestAnt(antName: string, code: string): Ant {
+    const newAnt: Ant = {
+      antName,
+      column: 0,
+      row: 0,
+      score: 0,
+      error: undefined,
+      color: this.generateColor(antName),
+      // eslint-disable-next-line no-new-func
+      doStep: new Function('view', '')
+    };
+
+    try {
+      // eslint-disable-next-line no-new-func
+      newAnt.doStep = new Function('view', code);
+    } catch (error) {
+      newAnt.error = error.toString();
+    }
+    return newAnt;
+  }
+
   private generateColor(antName: string) {
     var seed = this.hashString(antName);
     var seedrandom = require('seedrandom');
