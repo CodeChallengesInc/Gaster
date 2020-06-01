@@ -122,6 +122,7 @@ Response:
 
 ```
 {
-    "ticksPerSecond": 10  // How many times the game updates per second
+    "ticksPerSecond": number,   // How many times the game updates per second
+    "maxTicks": number          // How many ticks are in one game
 }
 ```
