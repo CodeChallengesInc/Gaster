@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
-import { TICKS_PER_SECOND } from '../services/game';
+import { TICKS_PER_SECOND, MAX_TICKS } from '../services/game';
 
 var express = require('express');
 var router = express.Router();
 
-const config = { ticksPerSecond: TICKS_PER_SECOND };
+const config = {
+  ticksPerSecond: TICKS_PER_SECOND,
+  maxTicks: MAX_TICKS
+};
 
 router.get('/', (req: Request, res: Response) => {
   res.end(JSON.stringify(config));
