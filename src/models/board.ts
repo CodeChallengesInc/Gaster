@@ -24,7 +24,7 @@ export class Board {
       }
     }
 
-    getView(row: number, col: number): BoardView {
+    getView(row: number, col: number, antName: string): BoardView {
       const tiles = this.randomizeRotation([
         [this.up(row), this.left(col)],
         [this.up(row), col],
@@ -40,15 +40,21 @@ export class Board {
       const view: AntView[] = [];
       const grid = this.grid;
       const food = this.food;
+      const ants = this.ants;
       tiles.forEach(tile => {
         // tile[0] is row, tile[1] is column
         const viewTile = {
           color: grid[tile[0]][tile[1]],
-          food: 0
+          food: 0,
+          ant: 0
         };
 
         if (food.find(f => f.row === tile[0] && f.column === tile[1])) {
           viewTile.food = 1;
+        }
+        // Find ants around us that aren't us
+        if (ants.filter(a => a.antName !== antName).find(a => a.row === tile[0] && a.column === tile[1])) {
+          viewTile.ant = 1;
         }
         view.push(viewTile);
       });
