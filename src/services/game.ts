@@ -74,7 +74,7 @@ export class GameService {
       const board = game.board;
       board.ants.filter(ant => !ant.error).forEach(ant => {
         // Let the ant run its function, then update board based on result
-        const antView = board.getView(ant.row, ant.column);
+        const antView = board.getView(ant.row, ant.column, ant.antName);
 
         var antAction: AntAction | undefined;
         try {
