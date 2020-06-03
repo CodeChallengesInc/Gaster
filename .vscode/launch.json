@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        
+        "type": "node",
+        "request": "launch",
+        "name": "Launch BACKEND",
+        "preLaunchTask": "Build Backend",
+        "program": "${workspaceFolder}\\build\\app.js"
+      }
+    ]
+  }
