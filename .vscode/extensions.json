@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "formulahendry.docker-explorer",
+        "ms-vscode.vscode-typescript-tslint-plugin",
+        "davidanson.vscode-markdownlint",
+    ]
+}
