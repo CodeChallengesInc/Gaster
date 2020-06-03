@@ -6,8 +6,9 @@
         "type": "node",
         "request": "launch",
         "name": "Launch BACKEND",
-        "preLaunchTask": "Build Backend",
-        "program": "${workspaceFolder}\\build\\app.js"
+        "program": "${workspaceFolder}/src/app.ts",
+        "preLaunchTask": "tsc: build - tsconfig.json",
+        "outFiles": ["${workspaceFolder}/build/**/*.js"]
       }
     ]
   }
