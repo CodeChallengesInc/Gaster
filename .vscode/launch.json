@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        
+        "type": "node",
+        "request": "launch",
+        "name": "Launch BACKEND",
+        "program": "${workspaceFolder}/src/app.ts",
+        "preLaunchTask": "tsc: build - tsconfig.debug.json",
+        "outFiles": ["${workspaceFolder}/build/**/*.js"]
+      }
+    ]
+  }
