@@ -46,7 +46,8 @@ export class Board {
         const viewTile = {
           color: grid[tile[0]][tile[1]],
           food: 0,
-          ant: 0
+          ant: 0,
+          ourFood: 0
         };
 
         if (food.find(f => f.row === tile[0] && f.column === tile[1])) {
@@ -58,6 +59,8 @@ export class Board {
         }
         view.push(viewTile);
       });
+
+      view[4].ourFood = ants.find(a => a.antName === antName)?.score || 0;
 
       return {
         view: view,
