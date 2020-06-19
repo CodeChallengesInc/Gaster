@@ -1,10 +1,10 @@
 import { Ant } from '../models/ant';
 import { Board } from '../models/board';
 import { Food } from '../models/food';
-import { AntLoaderService } from './ant-loader';
+import { AntLoaderServiceFactory } from './antLoaderServiceFactory';
 import { AntAction } from '../models/ant-action';
 import { Game } from '../models/game';
-import { GameStatus } from '../models/game-status';
+import { GameType } from '../models/gameType';
 
 const GRID_WIDTH = +(process.env.GRID_WIDTH || 200);
 const GRID_HEIGHT = +(process.env.GRID_HEIGHT || 80);
@@ -14,70 +14,86 @@ export const TICKS_PER_SECOND = +(process.env.TICKS_PER_SECOND || 100);
 
 const TEST_GRID_WIDTH = 60;
 const TEST_GRID_HEIGHT = 40;
-const TEST_TICKS_PER_SECOND = 1;
+const TEST_TICKS_PER_SECOND = 100;
 
 var instance: GameService | undefined;
 
 export class GameService {
     games: any = {};
 
-    createGame() {
+    createGame(gameType: GameType) {
       const uuidService = require('uuid');
-      var antLoader = AntLoaderService.getInstance();
+      var antLoader = AntLoaderServiceFactory.CreateAntLoaderService(gameType);
 
       const uuid: string = uuidService.v4();
       var board = new Board();
 
-      const ants: Ant[] = antLoader.loadAnts();
+      if (antLoader !== undefined) {
+        const ants: Ant[] = antLoader.loadAnts();
 
-      // Randomize ant starting position
-      ants.forEach(ant => {
-        ant.row = Math.floor(Math.random() * GRID_HEIGHT);
-        ant.column = Math.floor(Math.random() * GRID_WIDTH);
-      });
-      board.grid = this.generateGrid(GRID_HEIGHT, GRID_WIDTH);
-      board.ants = ants;
-      board.food = this.generateFood(GRID_HEIGHT, GRID_WIDTH);
-      var gameStatus: GameStatus =
-      {
-        gameLength: MAX_TICKS,
-        foodLeft: board.food.length,
-        elapsedTicks: board.elapsedTicks
-      };
+        // Randomize ant starting position
+        ants.forEach(ant => {
+          ant.row = Math.floor(Math.random() * GRID_HEIGHT);
+          ant.column = Math.floor(Math.random() * GRID_WIDTH);
+        });
+        board.grid = this.generateGrid(GRID_HEIGHT, GRID_WIDTH);
+        board.ants = ants;
+        board.food = this.generateFood(GRID_HEIGHT, GRID_WIDTH);
+        board.gameStatus =
+        {
+          gameLength: MAX_TICKS,
+          foodLeft: board.food.length,
+          elapsedTicks: 0,
+          ticksPerSecond: TICKS_PER_SECOND
+        };
 
-      const game: any = {
-        board,
-        intervalId: undefined,
-        gameStatus
-      };
-      game.intervalId = setInterval(() => this.tickGame(game), 1000 / TICKS_PER_SECOND);
-      this.games[uuid] = game;
+        const game: any = {
+          board,
+          intervalId: undefined
+        };
+        game.intervalId = setInterval(() => this.tickGame(game), 1000 / TICKS_PER_SECOND);
+        this.games[uuid] = game;
 
-      return uuid;
+        return uuid;
+      }
+      return undefined;
     }
 
-    createTestGame(antName: string, code: string): string {
+    createTestGame(gameType: GameType, antName: string, code: string): string {
       const uuidService = require('uuid');
-      var antLoader = AntLoaderService.getInstance();
+      var antLoader = AntLoaderServiceFactory.CreateAntLoaderService(gameType);
 
       const uuid: string = uuidService.v4();
       var board = new Board();
-      const ant = antLoader.loadTestAnt(antName, code);
+      if (antLoader !== undefined) {
+        const ant = antLoader.loadTestAnt(antName, code);
 
-      // Randomize ant starting position
-      ant.row = Math.floor(Math.random() * TEST_GRID_HEIGHT);
-      ant.column = Math.floor(Math.random() * TEST_GRID_WIDTH);
-      board.grid = this.generateGrid(TEST_GRID_HEIGHT, TEST_GRID_WIDTH);
-      board.ants = [ant];
-      board.food = this.generateFood(TEST_GRID_HEIGHT, TEST_GRID_WIDTH);
-      const game: any = {
-        board,
-        intervalId: undefined
-      };
-      game.intervalId = setInterval(() => this.tickGame(game), 1000 / TEST_TICKS_PER_SECOND);
-      this.games[uuid] = game;
+        // Randomize ant starting position
+        ant.row = Math.floor(Math.random() * TEST_GRID_HEIGHT);
+        ant.column = Math.floor(Math.random() * TEST_GRID_WIDTH);
+        board.grid = this.generateGrid(TEST_GRID_HEIGHT, TEST_GRID_WIDTH);
+        board.ants = [ant];
+        board.food = this.generateFood(TEST_GRID_HEIGHT, TEST_GRID_WIDTH);
 
-      return uuid;
+        board.gameStatus =
+        {
+          gameLength: MAX_TICKS,
+          foodLeft: board.food.length,
+          elapsedTicks: 0,
+          ticksPerSecond: TICKS_PER_SECOND
+        };
+
+        const game: any = {
+          board,
+          intervalId: undefined
+        };
+
+        game.intervalId = setInterval(() => this.tickGame(game), 1000 / TEST_TICKS_PER_SECOND);
+        this.games[uuid] = game;
+
+        return uuid;
+      }
+      return '';
     }
 
     tickGame(game: Game) {
@@ -115,11 +131,10 @@ export class GameService {
         }
       });
 
-      board.elapsedTicks++;
-      game.gameStatus.elapsedTicks = board.elapsedTicks;
-      game.gameStatus.foodLeft = board.food.length;
-      game.gameStatus.gameLength = MAX_TICKS;
-      if (board.elapsedTicks >= MAX_TICKS || board.food.length <= 0) {
+      game.board.gameStatus.elapsedTicks++;
+      game.board.gameStatus.foodLeft = board.food.length;
+      game.board.gameStatus.gameLength = MAX_TICKS;
+      if (game.board.gameStatus.elapsedTicks >= MAX_TICKS || board.food.length <= 0) {
         this.stopGame(game);
       }
     }
@@ -147,8 +162,8 @@ export class GameService {
       this.games[gameId] = undefined;
     }
 
-    getBoard(gameId: string) {
-      if (!this.games[gameId]) {
+    getGameState(gameId: string) {
+      if (!this.games[gameId].board) {
         return undefined;
       }
       return this.games[gameId].board;
@@ -158,7 +173,7 @@ export class GameService {
       if (!this.games[gameId]) {
         return undefined;
       }
-      return this.games[gameId].gameStatus;
+      return this.games[gameId].board.gameStatus;
     }
 
     generateGrid(height: number, width: number) {

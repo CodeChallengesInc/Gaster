@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import { GameService } from '../services/game';
+import { GameService } from '../services/gameService';
 
 var express = require('express');
 var router = express.Router();
-var gameService = GameService.getInstance();
+var game = GameService.getInstance();
 
 router.get('/:gameId', (req: Request, res: Response) => {
-  const board = gameService.getBoard(req.params.gameId);
+  const board = game.getGameState(req.params.gameId);
   if (!board) {
     res.status(404);
   }

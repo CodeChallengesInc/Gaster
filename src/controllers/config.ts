@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { TICKS_PER_SECOND, MAX_TICKS } from '../services/game';
+import { TICKS_PER_SECOND, MAX_TICKS } from '../services/gameService';
 
 var express = require('express');
 var router = express.Router();

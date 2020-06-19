@@ -9,7 +9,7 @@ var game = require('./controllers/game');
 var test = require('./controllers/test');
 var gameStatus = require('./controllers/gameStatus');
 
-const port = 3000;
+const port = 81;
 
 app.use((req: Request, res: Response, next: any) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
