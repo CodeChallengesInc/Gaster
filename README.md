@@ -79,16 +79,17 @@ Response:
 Notes:
 Creates a new test game with 1 ant using the code that is passed in through the body of the request (should be a JSON object with a 'code' property). The gameId can be used to retrieve the current state of the game
 
-### **config**
+### **gameStatus**
 
 GET:
 
 Request:
-N/A
+
+- gameId (guid string)
 
 Response:
 
-- [Config object](#config-object)
+- [GameStatus object](#gamestatus-object)
 
 ## Response Object Spec
 
@@ -96,9 +97,10 @@ Response:
 
 ```json
 {
-    "grid": number[][], // The grid of tiles, value is 1-8
-    "ants": Ant[],      // All the ants currently in the game
-    "food": Food[]      // All the food currently present on the board
+    "grid": number[][],      // The grid of tiles, value is 1-8
+    "ants": Ant[],           // All the ants currently in the game
+    "food": Food[],           // All the food currently present on the board
+    "gameStatus": GameStatus // The current status of this game
 }
 ```
 
@@ -125,11 +127,13 @@ Response:
 }
 ```
 
-### Config Object
+### GameStatus Object
 
 ```json
 {
-    "ticksPerSecond": number,   // How many times the game updates per second
-    "maxTicks": number          // How many ticks are in one game
+    "elapsedTicks": number,     // How many ticks have elapsed in this game
+    "ticksPerSecond": number,   // How many times this game updates per second
+    "gameLength": number,       // How many ticks are in this game
+    "foodLeft": number,         // How much food is left in this game
 }
 ```

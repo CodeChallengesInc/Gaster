@@ -1,12 +1,11 @@
 import { Ant } from '../models/ant';
+import { AntLoaderService } from './interfaces/antLoaderService';
 
 const antsDirectory = './ants';
 
-var instance: AntLoaderService | undefined;
-
 const MAX_ANTS = +(process.env.MAX_ANTS || 10);
 
-export class AntLoaderService {
+export class LoneAntAntLoaderService implements AntLoaderService {
   loadAnts(): Ant[] {
     const path = require('path');
     const fs = require('fs');
@@ -110,13 +109,5 @@ export class AntLoaderService {
       array[j] = x;
     }
     return array;
-  }
-
-  static getInstance() {
-    if (!instance) {
-      instance = new AntLoaderService();
-    }
-
-    return instance;
   }
 }

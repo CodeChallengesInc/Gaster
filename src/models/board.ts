@@ -3,12 +3,22 @@ import { BoardView } from './board-view';
 import { AntAction } from './ant-action';
 import { Ant } from './ant';
 import { Food } from './food';
+import { GameStatus } from './gameStatus';
+import { GameType } from './gameType';
 
 export class Board {
     grid: number[][] = [];
     ants: Ant[] = [];
     food: Food[] = [];
-    elapsedTicks = 0;
+    gameStatus: GameStatus =
+    {
+      gameLength: 0,
+      foodLeft: 0,
+      elapsedTicks: 0,
+      ticksPerSecond: 0
+    };
+
+    gameType: GameType = GameType.LoneAnt;
 
     updateBoard(view: BoardView, antAction: AntAction, ant: Ant) {
       const target = view.tiles[antAction.cell];

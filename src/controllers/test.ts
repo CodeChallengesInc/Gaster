@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import { GameService } from '../services/game';
+import { GameService } from '../services/gameService';
+import { GameType } from '../models/gameType';
 
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -11,7 +12,7 @@ router.use(bodyParser.json());
 
 router.post('/', (req: Request, res: Response) => {
   if (req.body?.code && req.body?.antName) {
-    const gameId = gameService.createTestGame(req.body.antName, req.body.code);
+    const gameId = gameService.createTestGame(GameType.LoneAnt, req.body.antName, req.body.code);
     res.end(gameId);
   }
   res.end();
