@@ -4,7 +4,6 @@ import { AnimalAction } from '../models/animal-action';
 import { Animal } from '../models/animal';
 import { Board } from '../models/board';
 import { Game } from '../models/game';
-import { Food } from '../models/food';
 
 const FOOD_PERCENTAGE = +(process.env.FOOD_PERCENTAGE || 0.05);
 const loneAntsDirectory = './ants';
@@ -12,7 +11,7 @@ const MAX_ANTS = +(process.env.MAX_ANTS || 10);
 const GRID_WIDTH = +(process.env.GRID_WIDTH || 200);
 const GRID_HEIGHT = +(process.env.GRID_HEIGHT || 80);
 export const TICKS_PER_SECOND = +(process.env.TICKS_PER_SECOND || 10);
-export const MAX_TICKS = +(process.env.MAX_TICKS || 1000);
+export const MAX_TICKS = +(process.env.MAX_TICKS || 10000);
 const TEST_GRID_WIDTH = 60;
 const TEST_GRID_HEIGHT = 40;
 const TEST_TICKS_PER_SECOND = 10;
@@ -24,6 +23,7 @@ export class LoneAntAnimalGameService implements AnimalGameService {
 
     var ants: Animal[] = [];
     const files = fs.readdirSync(loneAntsDirectory);
+    console.log('Loading Animals from %s', loneAntsDirectory);
     files.forEach((file: any) => {
       const data = fs.readFileSync(path.join(loneAntsDirectory, file));
       const fileName = path.basename(file, path.extname(file));
@@ -43,7 +43,7 @@ export class LoneAntAnimalGameService implements AnimalGameService {
       this.loadAnimals(),
       GRID_WIDTH,
       GRID_HEIGHT,
-      TEST_TICKS_PER_SECOND,
+      TICKS_PER_SECOND,
       MAX_TICKS,
       FOOD_PERCENTAGE);
   }
@@ -60,21 +60,21 @@ export class LoneAntAnimalGameService implements AnimalGameService {
 
   private createGame(animals: Animal[], width: number, height: number, ticksPerSecond: number, gameLength: number, foodPercentage: number): Game {
     var board: Board = new Board();
+    console.log('Creating new LoneAnt Game width:%s height:%s ticksPerSecond:%s gameLength:%s foodPercentage:%s', width, height, ticksPerSecond, gameLength, foodPercentage);
     // Randomize ant starting position
     animals.forEach(ant => {
       ant.row = Math.floor(Math.random() * height);
       ant.column = Math.floor(Math.random() * width);
     });
-    board.grid = this.generateGrid(height, width);
-    board.animals = animals;
-    board.food = this.generateFood(height, width, foodPercentage);
     board.gameStatus =
     {
       gameLength: gameLength,
-      foodLeft: board.food.length,
       elapsedTicks: 0,
+      foodLeft: 0,
       ticksPerSecond: ticksPerSecond
     };
+    this.generateGrid(board, height, width, foodPercentage);
+    board.animals = animals;
     const game: any = {
       board,
       intervalId: undefined
@@ -96,33 +96,32 @@ export class LoneAntAnimalGameService implements AnimalGameService {
     return array;
   }
 
-  generateGrid(height: number, width: number) {
-    const newGrid = Array(height).fill([]);
+  generateGrid(board: Board, height: number, width: number, foodPercentage: number) {
+    board.grid = Array(height).fill([]);
     for (var row = 0; row < height; row++) {
-      newGrid[row] = Array(width).fill(1);
+      board.grid[row] = Array(width).fill([]);
+      for (var col = 0; col < width; col++) {
+        board.grid[row][col] = new Array(2);
+        board.grid[row][col][0] = 1;
+        board.grid[row][col][1] = 0;
+      }
     }
-    return newGrid;
+    this.generateFood(board, height, width, foodPercentage);
   }
 
-  generateFood(height: number, width: number, foodPercentage: number) {
+  generateFood(board: Board, height: number, width: number, foodPercentage: number) {
     const numFood = Math.floor(width * height * foodPercentage);
-    const food: Food[] = [];
-
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (var junkFood of Array(numFood).keys()) {
-      const newFood = {
-        column: 0,
-        row: 0
-      };
-      // Make sure not to generate food on top of already generated food
-      do {
-        newFood.column = Math.floor(Math.random() * width);
-        newFood.row = Math.floor(Math.random() * height);
-      } while (food.find(item => item.column === newFood.column && item.row === newFood.row));
-      food.push(newFood);
+    for (var foodAdded = 0; foodAdded < numFood;) {
+      const row = Math.floor(Math.random() * height);
+      const col = Math.floor(Math.random() * width);
+      var food = board.grid[row][col];
+      if (food[1] === 0) {
+        board.grid[row][col][1]++;
+        foodAdded++;
+      }
     }
-
-    return food;
+    board.gameStatus.foodLeft = foodAdded;
   }
 
   private checkErrors(animalAction: AnimalAction | undefined) {
@@ -157,27 +156,17 @@ export class LoneAntAnimalGameService implements AnimalGameService {
         board.updateBoard(boardView, animalAction, animal);
 
         // Check for ant walking on food
-        var toRemove = -1;
-        for (var i = 0; i < board.food.length; i++) {
-          const food = board.food[i];
-          if (food.row === animal.row && food.column === animal.column) {
-            toRemove = i;
-            animal.score++;
-            break;
-          }
-        }
-
-        // Only remove food if we found one to remove
-        if (toRemove >= 0) {
-          board.food.splice(toRemove, 1);
+        if (board.grid[animal.row][animal.column][1] === 1) {
+          animal.score++;
+          board.grid[animal.row][animal.column][1] = 0;
+          game.board.gameStatus.foodLeft--;
         }
       }
     });
 
     game.board.gameStatus.elapsedTicks++;
-    game.board.gameStatus.foodLeft = board.food.length;
     game.board.gameStatus.gameLength = gameLength;
-    if (game.board.gameStatus.elapsedTicks >= gameLength || board.food.length <= 0) {
+    if (game.board.gameStatus.elapsedTicks >= gameLength || game.board.gameStatus.foodLeft <= 0) {
       clearInterval(game.intervalId);
     }
   }
