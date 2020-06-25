@@ -8,6 +8,7 @@ export class GameService {
     games: any = {};
 
     createGame(gameType: GameType) {
+      console.log('Creating new Game');
       const uuidService = require('uuid');
       var animalGameService = AnimalGameServiceFactory.CreateAnimalGameService(gameType);
 
@@ -57,9 +58,9 @@ export class GameService {
 
     static getInstance() {
       if (!instance) {
+        console.log('Creating new GameService');
         instance = new GameService();
       }
-
       return instance;
     }
 }

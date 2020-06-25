@@ -7,6 +7,7 @@ var gameService = GameService.getInstance();
 export const GAME_TYPE = +(process.env.GAME_TYPE || 0);
 
 router.post('/', (req: Request, res: Response) => {
+  console.log('Create Game Requested');
   const gameId = gameService.createGame(GAME_TYPE);
   res.end(gameId);
 });

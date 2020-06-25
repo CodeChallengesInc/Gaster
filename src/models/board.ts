@@ -1,15 +1,13 @@
 import { AnimalView } from './animal-view';
 import { BoardView } from './board-view';
 import { AnimalAction } from './animal-action';
-import { Food } from './food';
 import { GameStatus } from './game-status';
 import { GameType } from './game-type';
 import { Animal } from './animal';
 
 export class Board {
-    grid: number[][] = [];
+    grid: number[][][] = [];
     animals: Animal[] = [];
-    food: Food[] = [];
     gameStatus: GameStatus =
     {
       gameLength: 0,
@@ -26,7 +24,7 @@ export class Board {
       const targetCol = target[1];
       if (animalAction.color) {
         // Change grid color
-        this.grid[targetRow][targetCol] = animalAction.color;
+        this.grid[targetRow][targetCol][0] = animalAction.color;
       } else {
         // Move animal
         animal.column = targetCol;
@@ -49,20 +47,16 @@ export class Board {
 
       const view: AnimalView[] = [];
       const grid = this.grid;
-      const food = this.food;
       const animals = this.animals;
       tiles.forEach(tile => {
         // tile[0] is row, tile[1] is column
         const viewTile = {
-          color: grid[tile[0]][tile[1]],
-          food: 0,
+          color: grid[tile[0]][tile[1]][0],
+          food: grid[tile[0]][tile[1]][1],
           ant: 0,
           ourFood: 0
         };
 
-        if (food.find(f => f.row === tile[0] && f.column === tile[1])) {
-          viewTile.food = 1;
-        }
         // Find ants around us that aren't us
         if (animals.filter(a => a.name !== animalName).find(a => a.row === tile[0] && a.column === tile[1])) {
           viewTile.ant = 1;
