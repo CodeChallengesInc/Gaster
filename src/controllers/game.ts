@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { GameService } from '../services/gameService';
-import { GameType } from '../models/gameType';
 
 var express = require('express');
 var router = express.Router();
 var gameService = GameService.getInstance();
+export const GAME_TYPE = +(process.env.GAME_TYPE || 0);
 
 router.post('/', (req: Request, res: Response) => {
-  const gameId = gameService.createGame(GameType.LoneAnt);
+  const gameId = gameService.createGame(GAME_TYPE);
   res.end(gameId);
 });
 

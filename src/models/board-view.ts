@@ -1,6 +1,6 @@
-import { AntView } from './ant-view';
+import { AnimalView } from './animal-view';
 
 export interface BoardView {
-    view: AntView[];
+    view: AnimalView[];
     tiles: number[][];
 }

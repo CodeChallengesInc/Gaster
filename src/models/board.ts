@@ -1,14 +1,14 @@
-import { AntView } from './ant-view';
+import { AnimalView } from './animal-view';
 import { BoardView } from './board-view';
-import { AntAction } from './ant-action';
-import { Ant } from './ant';
+import { AnimalAction } from './animal-action';
 import { Food } from './food';
-import { GameStatus } from './gameStatus';
-import { GameType } from './gameType';
+import { GameStatus } from './game-status';
+import { GameType } from './game-type';
+import { Animal } from './animal';
 
 export class Board {
     grid: number[][] = [];
-    ants: Ant[] = [];
+    animals: Animal[] = [];
     food: Food[] = [];
     gameStatus: GameStatus =
     {
@@ -20,21 +20,21 @@ export class Board {
 
     gameType: GameType = GameType.LoneAnt;
 
-    updateBoard(view: BoardView, antAction: AntAction, ant: Ant) {
-      const target = view.tiles[antAction.cell];
+    updateBoard(view: BoardView, animalAction: AnimalAction, animal: Animal) {
+      const target = view.tiles[animalAction.cell];
       const targetRow = target[0];
       const targetCol = target[1];
-      if (antAction.color) {
+      if (animalAction.color) {
         // Change grid color
-        this.grid[targetRow][targetCol] = antAction.color;
+        this.grid[targetRow][targetCol] = animalAction.color;
       } else {
-        // Move ant
-        ant.column = targetCol;
-        ant.row = targetRow;
+        // Move animal
+        animal.column = targetCol;
+        animal.row = targetRow;
       }
     }
 
-    getView(row: number, col: number, antName: string): BoardView {
+    getView(row: number, col: number, animalName: string): BoardView {
       const tiles = this.randomizeRotation([
         [this.up(row), this.left(col)],
         [this.up(row), col],
@@ -47,10 +47,10 @@ export class Board {
         [this.down(row), this.right(col)]
       ]);
 
-      const view: AntView[] = [];
+      const view: AnimalView[] = [];
       const grid = this.grid;
       const food = this.food;
-      const ants = this.ants;
+      const animals = this.animals;
       tiles.forEach(tile => {
         // tile[0] is row, tile[1] is column
         const viewTile = {
@@ -64,13 +64,13 @@ export class Board {
           viewTile.food = 1;
         }
         // Find ants around us that aren't us
-        if (ants.filter(a => a.antName !== antName).find(a => a.row === tile[0] && a.column === tile[1])) {
+        if (animals.filter(a => a.name !== animalName).find(a => a.row === tile[0] && a.column === tile[1])) {
           viewTile.ant = 1;
         }
         view.push(viewTile);
       });
 
-      view[4].ourFood = ants.find(a => a.antName === antName)?.score || 0;
+      view[4].ourFood = animals.find(a => a.name === animalName)?.score || 0;
 
       return {
         view: view,

@@ -1,4 +1,4 @@
-export interface AntView {
+export interface AnimalView {
     color: number;
     food: number;
     ant: number;
