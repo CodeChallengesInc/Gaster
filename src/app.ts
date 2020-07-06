@@ -4,6 +4,7 @@ var express = require('express');
 var app = express();
 
 var board = require('./controllers/board');
+var gameTypes = require('./controllers/gameTypes');
 var game = require('./controllers/game');
 var test = require('./controllers/test');
 var gameStatus = require('./controllers/gameStatus');
@@ -19,6 +20,7 @@ app.use((req: Request, res: Response, next: any) => {
 
 app.use('/board', board);
 app.use('/game', game);
+app.use('/gameTypes', gameTypes);
 app.use('/test', test);
 app.use('/gameStatus', gameStatus);
 

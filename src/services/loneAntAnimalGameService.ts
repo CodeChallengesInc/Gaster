@@ -6,7 +6,7 @@ import { Board } from '../models/board';
 import { Game } from '../models/game';
 
 const FOOD_PERCENTAGE = +(process.env.FOOD_PERCENTAGE || 0.05);
-const loneAntsDirectory = './ants';
+const loneAntsDirectory = './ants/LoneAnt';
 const MAX_ANTS = +(process.env.MAX_ANTS || 10);
 const GRID_WIDTH = +(process.env.GRID_WIDTH || 200);
 const GRID_HEIGHT = +(process.env.GRID_HEIGHT || 80);
@@ -28,8 +28,8 @@ export class LoneAntAnimalGameService implements AnimalGameService {
       const data = fs.readFileSync(path.join(loneAntsDirectory, file));
       const fileName = path.basename(file, path.extname(file));
       const username = fileName.substring(0, fileName.indexOf('_'));
-      const antName = fileName.substring(fileName.indexOf('_') + 1);
-      const newAnt = Animal.CreateAnimal(Ant, antName, username, data.toString());
+      const animalName = fileName.substring(fileName.indexOf('_') + 1);
+      const newAnt = Animal.CreateAnimal(Ant, animalName, username, data.toString());
       ants.push(newAnt);
     });
 
@@ -48,9 +48,9 @@ export class LoneAntAnimalGameService implements AnimalGameService {
       FOOD_PERCENTAGE);
   }
 
-  createTestGameBoard(antName: string, code: string): Game {
+  createTestGameBoard(animalName: string, code: string): Game {
     return this.createGame(
-      [Animal.CreateAnimal(Ant, antName, 'Tester', code)],
+      [Animal.CreateAnimal(Ant, animalName, 'Tester', code)],
       TEST_GRID_WIDTH,
       TEST_GRID_HEIGHT,
       TEST_TICKS_PER_SECOND,

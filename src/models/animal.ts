@@ -12,12 +12,12 @@ export class Animal {
     creator!: string;
     doStep!: Function;
 
-    public static CreateAnimal(Ctor: AnimalConstructor, antName: string, creator: string, code: string): Animal {
-      return new Ctor(antName, creator, code);
+    public static CreateAnimal(Ctor: AnimalConstructor, animalName: string, creator: string, code: string): Animal {
+      return new Ctor(animalName, creator, code);
     }
 
-    protected generateColor(antName: string) {
-      var seed = this.hashString(antName);
+    protected generateColor(animalName: string) {
+      var seed = this.hashString(animalName);
       var seedrandom = require('seedrandom');
       const rng = seedrandom(seed);
       const r = Math.floor(rng() * 255);

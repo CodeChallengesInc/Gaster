@@ -69,7 +69,7 @@ POST:
 
 Request:
 
-- antName (string)
+- animalName (string)
 - code (string)
 
 Response:
@@ -104,17 +104,17 @@ Response:
 }
 ```
 
-### Ant Object
+### Animal Object
 
 ```json
 {
-    "antName": string,  // The name of the ant as defined at creation time
-    "column": number,   // The column on the board the ant is at
-    "row": number,      // The row on the board the ant is at
-    "score": number,    // The current score of the ant, based on food picked up
-    "error": string,    // Any error the ant has. If this is true, the ant will no longer be able to play
-    "color": string,    // The color of the ant, assigned randomly based on the ant's name
-    "creator": string   // The creator of the ant
+    "animalName": string,  // The name of the animal as defined at creation time
+    "column": number,   // The column on the board the animal is at
+    "row": number,      // The row on the board the animal is at
+    "score": number,    // The current score of the animal, based on food picked up
+    "error": string,    // Any error the animal has. If this is true, the animal will no longer be able to play
+    "color": string,    // The color of the animal, assigned randomly based on the animal's name
+    "creator": string   // The creator of the animal
 }
 ```
 

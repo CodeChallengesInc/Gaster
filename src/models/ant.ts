@@ -1,8 +1,7 @@
 import { Animal } from './animal';
 
 export class Ant extends Animal {
-    antName!: string;
-    name: string;
+    animalName: string;
     column: number;
     row: number;
     score: number;
@@ -12,8 +11,7 @@ export class Ant extends Animal {
     doStep: Function;
     constructor(name: string, creator: string, code: string) {
       super();
-      this.name = name;
-      this.antName = name;
+      this.animalName = name;
       this.column = 0;
       this.row = 0;
       this.score = 0;
