@@ -1,5 +1,5 @@
 export interface AnimalConstructor {
-    new (name: string, creator: string, code: string): Animal;
+    new (name: string, creator: string, code: string, type: number): Animal;
 }
 
 export class Animal {
@@ -10,14 +10,16 @@ export class Animal {
     error: string | undefined;
     color!: string;
     creator!: string;
+    code!: string;
+    type!: number;
     doStep!: Function;
 
-    public static CreateAnimal(Ctor: AnimalConstructor, animalName: string, creator: string, code: string): Animal {
-      return new Ctor(animalName, creator, code);
+    public static CreateAnimal(Ctor: AnimalConstructor, name: string, creator: string, code: string, type: number): Animal {
+      return new Ctor(name, creator, code, type);
     }
 
-    protected generateColor(animalName: string) {
-      var seed = this.hashString(animalName);
+    protected generateColor(name: string) {
+      var seed = this.hashString(name);
       var seedrandom = require('seedrandom');
       const rng = seedrandom(seed);
       const r = Math.floor(rng() * 255);

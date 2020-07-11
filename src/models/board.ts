@@ -32,8 +32,8 @@ export class Board {
       }
     }
 
-    getView(row: number, col: number, animalName: string): BoardView {
-      const tiles = this.randomizeRotation([
+    getTiles(row: number, col: number) : number[][] {
+      return this.randomizeRotation([
         [this.up(row), this.left(col)],
         [this.up(row), col],
         [this.up(row), this.right(col)],
@@ -44,6 +44,10 @@ export class Board {
         [this.down(row), col],
         [this.down(row), this.right(col)]
       ]);
+    }
+
+    getView(row: number, col: number, name: string): BoardView {
+      const tiles = this.getTiles(row, col);
 
       const view: AnimalView[] = [];
       const grid = this.grid;
@@ -58,13 +62,13 @@ export class Board {
         };
 
         // Find ants around us that aren't us
-        if (animals.filter(a => a.name !== animalName).find(a => a.row === tile[0] && a.column === tile[1])) {
+        if (animals.filter(a => a.name !== name).find(a => a.row === tile[0] && a.column === tile[1])) {
           viewTile.ant = 1;
         }
         view.push(viewTile);
       });
 
-      view[4].ourFood = animals.find(a => a.name === animalName)?.score || 0;
+      view[4].ourFood = animals.find(a => a.name === name)?.score || 0;
 
       return {
         view: view,

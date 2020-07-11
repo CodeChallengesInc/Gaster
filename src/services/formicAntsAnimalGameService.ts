@@ -3,11 +3,10 @@ import { AnimalGameService } from './interfaces/animalGameService';
 import { AnimalAction } from '../models/animal-action';
 import { Animal } from '../models/animal';
 import { Board } from '../models/board';
-import { BoardView } from '../models/board-view';
 import { Game } from '../models/game';
 
 const FOOD_PERCENTAGE = +(process.env.FOOD_PERCENTAGE || 0.05);
-const loneAntsDirectory = './ants/SpawningAnts';
+const formicAntsDirectory = './ants/FormicAnts';
 const MAX_ANTS = +(process.env.MAX_ANTS || 10);
 const GRID_WIDTH = +(process.env.GRID_WIDTH || 200);
 const GRID_HEIGHT = +(process.env.GRID_HEIGHT || 80);
@@ -17,21 +16,42 @@ const TEST_GRID_WIDTH = 60;
 const TEST_GRID_HEIGHT = 40;
 const TEST_TICKS_PER_SECOND = 10;
 
-export class SpawningAntsAnimalGameService implements AnimalGameService {
+export interface FormicAntAction extends AnimalAction {
+  type: number | undefined;
+}
+
+export interface FormicBoardView {
+  view: FormicAnimalView[];
+  tiles: number[][];
+}
+
+export interface FormicAntView {
+  food: number;
+  type: number;
+  friend: boolean;
+}
+
+export interface FormicAnimalView {
+  color: number;
+  food: number;
+  type: number;
+  ant?: FormicAntView;
+}
+
+export class FormicAntsAnimalGameService implements AnimalGameService {
   loadAnimals(): Animal[] {
     const path = require('path');
     const fs = require('fs');
 
     var ants: Animal[] = [];
-    const files = fs.readdirSync(loneAntsDirectory);
-    console.log('Loading Animals from %s', loneAntsDirectory);
+    const files = fs.readdirSync(formicAntsDirectory);
+    console.log('Loading Animals from %s', formicAntsDirectory);
     files.forEach((file: any) => {
-      const data = fs.readFileSync(path.join(loneAntsDirectory, file));
+      const data = fs.readFileSync(path.join(formicAntsDirectory, file));
       const fileName = path.basename(file, path.extname(file));
       const username = fileName.substring(0, fileName.indexOf('_'));
       const name = fileName.substring(fileName.indexOf('_') + 1);
-      const newAnt = Animal.CreateAnimal(Ant, name, username, data.toString(), 5);
-      ants.push(newAnt);
+      ants.push(Animal.CreateAnimal(Ant, name, username, data.toString(), 5));
     });
 
     ants = this.shuffle(ants);
@@ -61,7 +81,7 @@ export class SpawningAntsAnimalGameService implements AnimalGameService {
 
   private createGame(animals: Animal[], width: number, height: number, ticksPerSecond: number, gameLength: number, foodPercentage: number): Game {
     var board: Board = new Board();
-    console.log('Creating new Spawning Ants Game width:%s height:%s ticksPerSecond:%s gameLength:%s foodPercentage:%s', width, height, ticksPerSecond, gameLength, foodPercentage);
+    console.log('Creating new Formic Ants Game width:%s height:%s ticksPerSecond:%s gameLength:%s foodPercentage:%s', width, height, ticksPerSecond, gameLength, foodPercentage);
     // Randomize ant starting position
     animals.forEach(ant => {
       ant.row = Math.floor(Math.random() * height);
@@ -124,7 +144,7 @@ export class SpawningAntsAnimalGameService implements AnimalGameService {
     board.gameStatus.foodLeft = foodAdded;
   }
 
-  private checkErrors(boardView: BoardView, animalAction: AnimalAction | undefined) {
+  private checkErrors(animal: Animal, boardView: FormicBoardView, animalAction: FormicAntAction | undefined) {
     if (!animalAction) {
       return 'Ant did not return an ant action';
     } else if (animalAction.cell === undefined) {
@@ -133,29 +153,95 @@ export class SpawningAntsAnimalGameService implements AnimalGameService {
       return `Cell number '${animalAction.cell}' is not valid`;
     } else if (animalAction.color && (!Number.isInteger(animalAction.color) || animalAction.color < 1 || animalAction.color > 8)) {
       return `Color '${animalAction.color}' is not valid`;
-    } else if (boardView.view[animalAction.cell].ant > 0) {
-      return 'Ant stepped on another ant!';
+    // } else if (boardView.view[animalAction.cell].ant !== undefined && animalAction.cell !== 4) {
+      // return 'Ant stepped on another ant!';
+    } else if (animal.score === 0 && animalAction.type !== undefined) {
+      return "You don't have enough food to create a new ant!";
+    } else if (animal.score < 0) {
+      return "You can't have a negative score!";
     }
 
     return undefined;
+  }
+
+  getView(board: Board, row: number, col: number, name: string): FormicBoardView {
+    const tiles = board.getTiles(row, col);
+
+    const view: FormicAnimalView[] = [];
+    const grid = board.grid;
+    const animals = board.animals;
+    const thisAnt = animals.find(a => a.row === row && a.column === col) as Ant;
+    tiles.forEach(tile => {
+      // tile[0] is row, tile[1] is column
+      const viewTile: FormicAnimalView = {
+        color: grid[tile[0]][tile[1]][0],
+        food: grid[tile[0]][tile[1]][1],
+        type: thisAnt.type
+      };
+
+      // Find ants around us that aren't us
+      const currAnt = animals.find(a => a.row === tile[0] && a.column === tile[1]);
+      if (currAnt !== undefined) {
+        const antView = <FormicAntView> {
+          food: currAnt.score,
+          type: currAnt.type
+        };
+        if (currAnt.name === name) {
+          antView.friend = true;
+          if (currAnt.score > 0 && thisAnt.type === 5 && currAnt.type !== 5) {
+            thisAnt.score++;
+            currAnt.score--;
+          }
+        } else {
+          antView.friend = false;
+        }
+        viewTile.ant = antView;
+      }
+      view.push(viewTile);
+    });
+
+    return {
+      view: view,
+      tiles: tiles
+    };
+  }
+
+  updateBoard(board: Board, view: FormicBoardView, animalAction: FormicAntAction, animal: Animal) {
+    const target = view.tiles[animalAction.cell];
+    const targetRow = target[0];
+    const targetCol = target[1];
+    if (animalAction.type) {
+      const newAnt = Animal.CreateAnimal(Ant, animal.name, animal.creator, animal.code, animalAction.type);
+      newAnt.row = targetRow;
+      newAnt.column = targetCol;
+      board.animals.push(newAnt);
+      animal.score--;
+    } else if (animalAction.color) {
+      // Change grid color
+      board.grid[targetRow][targetCol][0] = animalAction.color;
+    } else {
+      // Move animal
+      animal.column = targetCol;
+      animal.row = targetRow;
+    }
   }
 
   tickGame(game: Game, gameLength: number) {
     const board = game.board;
     board.animals.filter(animal => !animal.error).forEach(animal => {
       // Let the animal run its function, then update board based on result
-      const boardView = board.getView(animal.row, animal.column, animal.name);
+      const boardView = this.getView(board, animal.row, animal.column, animal.name);
 
-      var animalAction: AnimalAction | undefined;
+      var animalAction: FormicAntAction | undefined;
       try {
         animalAction = animal.doStep(boardView.view);
-        animal.error = this.checkErrors(boardView, animalAction);
+        animal.error = this.checkErrors(animal, boardView, animalAction);
       } catch (error) {
         animal.error = error.toString();
       }
 
       if (!animal.error && animalAction) {
-        board.updateBoard(boardView, animalAction, animal);
+        this.updateBoard(board, boardView, animalAction, animal);
 
         // Check for ant walking on food
         if (board.grid[animal.row][animal.column][1] === 1) {

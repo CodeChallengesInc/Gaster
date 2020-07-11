@@ -69,7 +69,7 @@ POST:
 
 Request:
 
-- animalName (string)
+- name (string)
 - code (string)
 
 Response:
@@ -108,7 +108,7 @@ Response:
 
 ```json
 {
-    "animalName": string,  // The name of the animal as defined at creation time
+    "name": string,  // The name of the animal as defined at creation time
     "column": number,   // The column on the board the animal is at
     "row": number,      // The row on the board the animal is at
     "score": number,    // The current score of the animal, based on food picked up

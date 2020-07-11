@@ -163,6 +163,14 @@ export class GameService {
         {cell0, color:9}: color must be from 1-8.
         \`\`\`
         `
+      },
+      {
+        gameType: GameType.FormicAnts,
+        gameName: 'Formic Ants',
+        gameRules: `# Rules
+
+        https://codegolf.stackexchange.com/questions/135102/formic-functions-ant-queen-of-the-hill-contest/
+        `
       }
     ];
   }
@@ -183,13 +191,13 @@ export class GameService {
     return undefined;
   }
 
-  createTestGame(gameType: GameType, animalName: string, code: string): string {
+  createTestGame(gameType: GameType, name: string, code: string): string {
     const uuidService = require('uuid');
     var animalGameService = AnimalGameServiceFactory.CreateAnimalGameService(gameType);
 
     const uuid: string = uuidService.v4();
     if (animalGameService !== undefined) {
-      this.games[uuid] = animalGameService.createTestGameBoard(animalName, code);
+      this.games[uuid] = animalGameService.createTestGameBoard(name, code);
       return uuid;
     }
     return '';

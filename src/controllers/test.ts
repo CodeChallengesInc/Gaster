@@ -15,8 +15,8 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
 router.post('/', (req: Request, res: Response) => {
-  if (req.body?.gameType && req.body?.code && req.body?.animalName) {
-    const gameId = gameService.createTestGame((<any>GameType)[req.body.gameType], req.body.animalName, req.body.code);
+  if (req.body?.gameType && req.body?.code && req.body?.name) {
+    const gameId = gameService.createTestGame((<any>GameType)[req.body.gameType], req.body.name, req.body.code);
     res.end(gameId);
   }
   res.end();
