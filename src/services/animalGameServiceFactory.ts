@@ -3,10 +3,9 @@ import { LoneAntAnimalGameService } from './loneAntAnimalGameService';
 import { SpawningAntsAnimalGameService } from './spawningAntsAnimalGameService';
 import { FormicAntsAnimalGameService } from './formicAntsAnimalGameService';
 
-var loneAntInstance: LoneAntAnimalGameService | undefined;
-var spawningAntsInstance: SpawningAntsAnimalGameService | undefined;
-var formicAntsInstance: FormicAntsAnimalGameService | undefined;
-
+let loneAntInstance: LoneAntAnimalGameService | undefined;
+let spawningAntsInstance: SpawningAntsAnimalGameService | undefined;
+let formicAntsInstance: FormicAntsAnimalGameService | undefined;
 
 export class AnimalGameServiceFactory {
   static CreateAnimalGameService(gameType: GameType) {

@@ -3,11 +3,11 @@ import { Request, Response } from 'express';
 const express = require('express');
 const app = express();
 
-var board = require('./controllers/board');
-var gameTypes = require('./controllers/gameTypes');
-var game = require('./controllers/game');
-var test = require('./controllers/test');
-var gameStatus = require('./controllers/gameStatus');
+const board = require('./controllers/board');
+const gameTypes = require('./controllers/gameTypes');
+const game = require('./controllers/game');
+const test = require('./controllers/test');
+const gameStatus = require('./controllers/gameStatus');
 
 const port = 3000;
 
