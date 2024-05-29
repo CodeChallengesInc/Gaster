@@ -11,7 +11,14 @@ const config: Config = {
   coverageDirectory: 'coverage',
   testMatch: ['**/__tests__/**/*.ts?(x)', '**/?(*.)+(spec).ts?(x)'],
   coverageProvider: 'v8',
-  preset: 'ts-jest'
+  preset: 'ts-jest',
+  coverageThreshold: {
+    global: {
+      branches: 70,
+      lines: 70,
+      statements: 70
+    }
+  }
 };
 
 export default config;

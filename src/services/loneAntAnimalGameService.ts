@@ -1,9 +1,9 @@
-import { Ant } from '../models/ant';
 import { AnimalGameService } from './interfaces/animalGameService';
 import { AnimalAction } from '../models/animal-action';
 import { Animal } from '../models/animal';
 import { Board } from '../models/board';
 import { Game } from '../models/game';
+import { AnimalLoadingService } from './animalLoadingService';
 
 const FOOD_PERCENTAGE = +(process.env.FOOD_PERCENTAGE || 0.05);
 const loneAntsDirectory = './ants/LoneAnt';
@@ -12,48 +12,20 @@ const GRID_WIDTH = +(process.env.GRID_WIDTH || 200);
 const GRID_HEIGHT = +(process.env.GRID_HEIGHT || 80);
 export const TICKS_PER_SECOND = +(process.env.TICKS_PER_SECOND || 10);
 export const MAX_TICKS = +(process.env.MAX_TICKS || 10000);
-const TEST_GRID_WIDTH = 60;
-const TEST_GRID_HEIGHT = 40;
-const TEST_TICKS_PER_SECOND = 10;
 
 export class LoneAntAnimalGameService implements AnimalGameService {
-  loadAnimals(): Animal[] {
-    const path = require('path');
-    const fs = require('fs');
+  private animalLoadingService: AnimalLoadingService;
 
-    let ants: Animal[] = [];
-    const files = fs.readdirSync(loneAntsDirectory);
-    console.log('Loading Animals from %s', loneAntsDirectory);
-    files.forEach((file: any) => {
-      const data = fs.readFileSync(path.join(loneAntsDirectory, file));
-      const fileName = path.basename(file, path.extname(file));
-      const username = fileName.substring(0, fileName.indexOf('_'));
-      const name = fileName.substring(fileName.indexOf('_') + 1);
-      const newAnt = Animal.CreateAnimal(Ant, name, username, data.toString(), 5);
-      ants.push(newAnt);
-    });
-
-    ants = this.shuffle(ants);
-
-    return ants.slice(0, MAX_ANTS);
+  constructor(animalLoadingService: AnimalLoadingService) {
+    this.animalLoadingService = animalLoadingService;
   }
 
   createNewGameBoard() {
     return this.createGame(
-      this.loadAnimals(),
+      this.animalLoadingService.loadAnimals(loneAntsDirectory, MAX_ANTS),
       GRID_WIDTH,
       GRID_HEIGHT,
       TICKS_PER_SECOND,
-      MAX_TICKS,
-      FOOD_PERCENTAGE);
-  }
-
-  createTestGameBoard(name: string, code: string): Game {
-    return this.createGame(
-      [Animal.CreateAnimal(Ant, name, 'Tester', code, 5)],
-      TEST_GRID_WIDTH,
-      TEST_GRID_HEIGHT,
-      TEST_TICKS_PER_SECOND,
       MAX_TICKS,
       FOOD_PERCENTAGE);
   }
@@ -82,18 +54,6 @@ export class LoneAntAnimalGameService implements AnimalGameService {
 
     game.intervalId = setInterval(() => this.tickGame(game, gameLength), 1000 / ticksPerSecond);
     return game;
-  }
-
-  // From: https://stackoverflow.com/a/6274381
-  private shuffle(array: any[]) {
-    let j, x, i;
-    for (i = array.length - 1; i > 0; i--) {
-      j = Math.floor(Math.random() * (i + 1));
-      x = array[i];
-      array[i] = array[j];
-      array[j] = x;
-    }
-    return array;
   }
 
   generateGrid(board: Board, height: number, width: number, foodPercentage: number) {
@@ -132,7 +92,7 @@ export class LoneAntAnimalGameService implements AnimalGameService {
       return 'Ant did not return a cell';
     } else if (!Number.isInteger(animalAction.cell) || animalAction.cell < 0 || animalAction.cell > 8) {
       return `Cell number '${animalAction.cell}' is not valid`;
-    } else if (animalAction.color && (!Number.isInteger(animalAction.color) || animalAction.color < 1 || animalAction.color > 8)) {
+    } else if (animalAction.color !== undefined && ((!Number.isInteger(animalAction.color) || animalAction.color < 1 || animalAction.color > 8))) {
       return `Color '${animalAction.color}' is not valid`;
     }
 

@@ -3,7 +3,3 @@ export enum GameType {
     SpawningAnts = 'SpawningAnts',
     FormicAnts = 'FormicAnts'
 }
-
-interface Object {
-    [idx: string]: any;
-  }
