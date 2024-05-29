@@ -45,18 +45,6 @@ export class GameService {
     return undefined;
   }
 
-  createTestGame(gameType: GameType, name: string, code: string): string {
-    const animalGameService = AnimalGameServiceFactory.CreateAnimalGameService(gameType);
-
-    const uuid: string = uuidService.v4();
-    if (animalGameService !== undefined) {
-      this.games.set(uuid, animalGameService.createTestGameBoard(name, code));
-      return uuid;
-    }
-    console.error('Could not create game, Game Type not found: ', GameType[gameType]);
-    return '';
-  }
-
   private stopGame(game: Game) {
     clearInterval(game.intervalId);
   }

@@ -15,7 +15,7 @@ describe('GameService', () => {
     (AnimalGameServiceFactory.CreateAnimalGameService as jest.Mock).mockClear();
   });
 
-  it('creates a game', () => {
+  it('should create a game when AnimalGameService can be created', () => {
     (AnimalGameServiceFactory.CreateAnimalGameService as jest.Mock).mockReturnValue({
       createNewGameBoard: jest.fn().mockReturnValue({ intervalId: setInterval(() => {}, 1000), board: {} })
     });
@@ -26,7 +26,7 @@ describe('GameService', () => {
     expect(gameService.getGameBoard(gameId!)).toBeDefined();
   });
 
-  it('does not create a game if animalGameService cannot be created', () => {
+  it('should not create a game when AnimalGameService cannot be created', () => {
     (AnimalGameServiceFactory.CreateAnimalGameService as jest.Mock).mockReturnValue(undefined);
 
     const gameId = gameService.createGame(GameType.LoneAnt);
@@ -34,26 +34,7 @@ describe('GameService', () => {
     expect(gameId).toBeUndefined();
   });
 
-  it('creates a test game', () => {
-    (AnimalGameServiceFactory.CreateAnimalGameService as jest.Mock).mockReturnValue({
-      createTestGameBoard: jest.fn().mockReturnValue({ intervalId: setInterval(() => {}, 1000), board: {} })
-    });
-
-    const gameId = gameService.createTestGame(GameType.LoneAnt, 'Jenny', '1234');
-
-    expect(gameId).toBeDefined();
-    expect(gameService.getGameBoard(gameId!)).toBeDefined();
-  });
-
-  it('does not create a test game if animalGameService cannot be created', () => {
-    (AnimalGameServiceFactory.CreateAnimalGameService as jest.Mock).mockReturnValue(undefined);
-
-    const gameId = gameService.createTestGame(GameType.LoneAnt, 'Carl', '1234');
-
-    expect(gameId).toBe('');
-  });
-
-  it('deletes a game', () => {
+  it('should delete a game when a valid gameId is provided', () => {
     (AnimalGameServiceFactory.CreateAnimalGameService as jest.Mock).mockReturnValue({
       createNewGameBoard: jest.fn().mockReturnValue({ intervalId: setInterval(() => {}, 1000), board: {} })
     });
@@ -65,7 +46,7 @@ describe('GameService', () => {
     expect(gameService.getGameBoard(gameId!)).toBeUndefined();
   });
 
-  it('gets the game board', () => {
+  it('should get the game board when a valid gameId is provided', () => {
     (AnimalGameServiceFactory.CreateAnimalGameService as jest.Mock).mockReturnValue({
       createNewGameBoard: jest.fn().mockReturnValue({ intervalId: setInterval(() => {}, 1000), board: {} })
     });
@@ -77,7 +58,7 @@ describe('GameService', () => {
     expect(gameBoard).toBeDefined();
   });
 
-  it('gets the game status', () => {
+  it('should get the game status as "Running" when a valid gameId is provided', () => {
     (AnimalGameServiceFactory.CreateAnimalGameService as jest.Mock).mockReturnValue({
       createNewGameBoard: jest.fn().mockReturnValue({ intervalId: setInterval(() => {}, 1000), board: { gameStatus: 'Running' } })
     });
@@ -89,7 +70,17 @@ describe('GameService', () => {
     expect(gameStatus).toBe('Running');
   });
 
-  it('gets game types', () => {
+  it('should return undefined when getGameStatus is called with an invalid gameId', () => {
+    (AnimalGameServiceFactory.CreateAnimalGameService as jest.Mock).mockReturnValue({
+      createNewGameBoard: jest.fn().mockReturnValue({ intervalId: setInterval(() => {}, 1000), board: { gameStatus: 'Running' } })
+    });
+
+    const gameStatus = gameService.getGameStatus('invalidId');
+
+    expect(gameStatus).toBe(undefined);
+  });
+
+  it('should return all configured game types', () => {
     const expectedGameTypes = [
       {
         gameType: GameType.LoneAnt,
