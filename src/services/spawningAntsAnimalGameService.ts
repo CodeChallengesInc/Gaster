@@ -22,7 +22,7 @@ export class SpawningAntsAnimalGameService implements AnimalGameService {
     const path = require('path');
     const fs = require('fs');
 
-    var ants: Animal[] = [];
+    let ants: Animal[] = [];
     const files = fs.readdirSync(loneAntsDirectory);
     console.log('Loading Animals from %s', loneAntsDirectory);
     files.forEach((file: any) => {
@@ -60,7 +60,7 @@ export class SpawningAntsAnimalGameService implements AnimalGameService {
   }
 
   private createGame(animals: Animal[], width: number, height: number, ticksPerSecond: number, gameLength: number, foodPercentage: number): Game {
-    var board: Board = new Board();
+    const board: Board = new Board();
     console.log('Creating new Spawning Ants Game width:%s height:%s ticksPerSecond:%s gameLength:%s foodPercentage:%s', width, height, ticksPerSecond, gameLength, foodPercentage);
     // Randomize ant starting position
     animals.forEach(ant => {
@@ -69,10 +69,10 @@ export class SpawningAntsAnimalGameService implements AnimalGameService {
     });
     board.gameStatus =
     {
-      gameLength: gameLength,
+      gameLength,
       elapsedTicks: 0,
       foodLeft: 0,
-      ticksPerSecond: ticksPerSecond
+      ticksPerSecond
     };
     this.generateGrid(board, height, width, foodPercentage);
     board.animals = animals;
@@ -87,7 +87,7 @@ export class SpawningAntsAnimalGameService implements AnimalGameService {
 
   // From: https://stackoverflow.com/a/6274381
   private shuffle(array: any[]) {
-    var j, x, i;
+    let j, x, i;
     for (i = array.length - 1; i > 0; i--) {
       j = Math.floor(Math.random() * (i + 1));
       x = array[i];
@@ -99,9 +99,9 @@ export class SpawningAntsAnimalGameService implements AnimalGameService {
 
   generateGrid(board: Board, height: number, width: number, foodPercentage: number) {
     board.grid = Array(height).fill([]);
-    for (var row = 0; row < height; row++) {
+    for (let row = 0; row < height; row++) {
       board.grid[row] = Array(width).fill([]);
-      for (var col = 0; col < width; col++) {
+      for (let col = 0; col < width; col++) {
         board.grid[row][col] = new Array(2);
         board.grid[row][col][0] = 1;
         board.grid[row][col][1] = 0;
@@ -113,7 +113,8 @@ export class SpawningAntsAnimalGameService implements AnimalGameService {
   generateFood(board: Board, height: number, width: number, foodPercentage: number) {
     const numFood = Math.floor(width * height * foodPercentage);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (var foodAdded = 0; foodAdded < numFood;) {
+    let foodAdded = 0;
+    for (foodAdded; foodAdded < numFood;) {
       const row = Math.floor(Math.random() * height);
       const col = Math.floor(Math.random() * width);
       if (board.grid[row][col][1] === 0) {
@@ -146,11 +147,11 @@ export class SpawningAntsAnimalGameService implements AnimalGameService {
       // Let the animal run its function, then update board based on result
       const boardView = board.getView(animal.row, animal.column, animal.name);
 
-      var animalAction: AnimalAction | undefined;
+      let animalAction: AnimalAction | undefined;
       try {
         animalAction = animal.doStep(boardView.view);
         animal.error = this.checkErrors(boardView, animalAction);
-      } catch (error) {
+      } catch (error: any) {
         animal.error = error.toString();
       }
 

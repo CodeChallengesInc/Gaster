@@ -2,8 +2,8 @@ import { GameType } from '../models/game-type';
 import { LoneAntAnimalGameService } from './loneAntAnimalGameService';
 import { SpawningAntsAnimalGameService } from './spawningAntsAnimalGameService';
 
-var loneAntInstance: LoneAntAnimalGameService | undefined;
-var spawningAntsInstance: SpawningAntsAnimalGameService | undefined;
+let loneAntInstance: LoneAntAnimalGameService | undefined;
+let spawningAntsInstance: SpawningAntsAnimalGameService | undefined;
 
 export class AnimalGameServiceFactory {
   static CreateAnimalGameService(gameType: GameType) {
