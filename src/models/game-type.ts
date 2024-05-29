@@ -1,4 +1,9 @@
 export enum GameType {
-    LoneAnt = 0,
-    SpawningAnts = 1,
+    LoneAnt = 'LoneAnt',
+    SpawningAnts = 'SpawningAnts',
+    FormicAnts = 'FormicAnts'
 }
+
+interface Object {
+    [idx: string]: any;
+  }
