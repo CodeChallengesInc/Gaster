@@ -2,8 +2,10 @@ import { AnimalGameServiceFactory } from './animalGameServiceFactory';
 import { Game } from '../models/game';
 import { GameType } from '../models/game-type';
 import { GameTypeInformation } from '../models/game-type-information';
+import * as uuidService from 'uuid';
 
-var instance: GameService | undefined;
+// eslint-disable-next-line no-use-before-define
+let instance: GameService | undefined;
 
 export class GameService {
   getGameTypes(): GameTypeInformation[] {

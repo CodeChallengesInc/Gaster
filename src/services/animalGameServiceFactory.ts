@@ -7,6 +7,7 @@ var loneAntInstance: LoneAntAnimalGameService | undefined;
 var spawningAntsInstance: SpawningAntsAnimalGameService | undefined;
 var formicAntsInstance: FormicAntsAnimalGameService | undefined;
 
+
 export class AnimalGameServiceFactory {
   static CreateAnimalGameService(gameType: GameType) {
     if (gameType === GameType.LoneAnt) {

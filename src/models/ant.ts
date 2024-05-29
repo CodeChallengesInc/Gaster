@@ -23,13 +23,11 @@ export class Ant extends Animal {
       this.color = this.generateColor(name);
       this.code = code;
       this.creator = creator;
+    try{
       // eslint-disable-next-line no-new-func
-      this.doStep = new Function('view', '');
-      try {
-        // eslint-disable-next-line no-new-func
-        this.doStep = new Function('view', code);
-      } catch (error) {
-        this.error = error.toString();
-      }
+      this.doStep = new Function('view', code);
+    } catch (error: any) {
+      this.error = error.toString();
     }
+  }
 }

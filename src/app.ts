@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
 
 var board = require('./controllers/board');
 var gameTypes = require('./controllers/gameTypes');
@@ -25,7 +25,7 @@ app.use('/test', test);
 app.use('/gameStatus', gameStatus);
 
 const server = app.listen(port, function() {
-  var host = server.address().address;
-  var port = server.address().port;
+  const host = server.address().address;
+  const port = server.address().port;
   console.log('CCI backend listening at http://%s:%s', host, port);
 });
