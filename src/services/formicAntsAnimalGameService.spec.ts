@@ -1,9 +1,7 @@
 /* eslint-disable no-undef */
 import { FormicAntsAnimalGameService } from './formicAntsAnimalGameService';
 import { AnimalLoadingService } from './animalLoadingService';
-import { Animal } from '../models/animal';
 import { Board } from '../models/board';
-import { Ant } from '../models/ant';
 
 jest.mock('./animalLoadingService', () => {
   return {

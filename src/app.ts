@@ -6,7 +6,6 @@ const app = express();
 const board = require('./controllers/board');
 const gameTypes = require('./controllers/gameTypes');
 const game = require('./controllers/game');
-const test = require('./controllers/test');
 const gameStatus = require('./controllers/gameStatus');
 
 const port = 3000;
@@ -21,7 +20,6 @@ app.use((req: Request, res: Response, next: any) => {
 app.use('/board', board);
 app.use('/game', game);
 app.use('/gameTypes', gameTypes);
-app.use('/test', test);
 app.use('/gameStatus', gameStatus);
 
 const server = app.listen(port, function() {
