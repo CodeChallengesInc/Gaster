@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { GameService } from '../services/gameService';
 
-var express = require('express');
-var router = express.Router();
-var game = GameService.getInstance();
+const express = require('express');
+const router = express.Router();
+const game = GameService.getInstance();
 
 router.get('/:gameId', (req: Request, res: Response) => {
   const board = game.getGameBoard(req.params.gameId);

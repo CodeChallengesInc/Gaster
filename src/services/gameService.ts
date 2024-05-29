@@ -2,65 +2,66 @@ import { AnimalGameServiceFactory } from './animalGameServiceFactory';
 import { Game } from '../models/game';
 import { GameType } from '../models/game-type';
 
-var instance: GameService | undefined;
+// eslint-disable-next-line no-use-before-define
+let instance: GameService | undefined;
 
 export class GameService {
-    games: any = {};
+  games: any = {};
 
-    createGame(gameType: GameType) {
-      console.log('Creating new Game');
-      const uuidService = require('uuid');
-      var animalGameService = AnimalGameServiceFactory.CreateAnimalGameService(gameType);
+  createGame(gameType: GameType) {
+    console.log('Creating new Game');
+    const uuidService = require('uuid');
+    const animalGameService = AnimalGameServiceFactory.CreateAnimalGameService(gameType);
 
-      const uuid: string = uuidService.v4();
+    const uuid: string = uuidService.v4();
 
-      if (animalGameService !== undefined) {
-        this.games[uuid] = animalGameService.createNewGameBoard();
-        return uuid;
-      }
+    if (animalGameService !== undefined) {
+      this.games[uuid] = animalGameService.createNewGameBoard();
+      return uuid;
+    }
+    return undefined;
+  }
+
+  createTestGame(gameType: GameType, animalName: string, code: string): string {
+    const uuidService = require('uuid');
+    const animalGameService = AnimalGameServiceFactory.CreateAnimalGameService(gameType);
+
+    const uuid: string = uuidService.v4();
+    if (animalGameService !== undefined) {
+      this.games[uuid] = animalGameService.createTestGameBoard(animalName, code);
+      return uuid;
+    }
+    return '';
+  }
+
+  private stopGame(game: Game) {
+    clearInterval(game.intervalId);
+  }
+
+  deleteGame(gameId: string) {
+    this.stopGame(this.games[gameId]);
+    this.games[gameId] = undefined;
+  }
+
+  getGameBoard(gameId: string) {
+    if (!this.games[gameId].board) {
       return undefined;
     }
+    return this.games[gameId].board;
+  }
 
-    createTestGame(gameType: GameType, animalName: string, code: string): string {
-      const uuidService = require('uuid');
-      var animalGameService = AnimalGameServiceFactory.CreateAnimalGameService(gameType);
-
-      const uuid: string = uuidService.v4();
-      if (animalGameService !== undefined) {
-        this.games[uuid] = animalGameService.createTestGameBoard(animalName, code);
-        return uuid;
-      }
-      return '';
+  getGameStatus(gameId: string) {
+    if (!this.games[gameId]) {
+      return undefined;
     }
+    return this.games[gameId].board.gameStatus;
+  }
 
-    private stopGame(game: Game) {
-      clearInterval(game.intervalId);
+  static getInstance() {
+    if (!instance) {
+      console.log('Creating new GameService');
+      instance = new GameService();
     }
-
-    deleteGame(gameId: string) {
-      this.stopGame(this.games[gameId]);
-      this.games[gameId] = undefined;
-    }
-
-    getGameBoard(gameId: string) {
-      if (!this.games[gameId].board) {
-        return undefined;
-      }
-      return this.games[gameId].board;
-    }
-
-    getGameStatus(gameId: string) {
-      if (!this.games[gameId]) {
-        return undefined;
-      }
-      return this.games[gameId].board.gameStatus;
-    }
-
-    static getInstance() {
-      if (!instance) {
-        console.log('Creating new GameService');
-        instance = new GameService();
-      }
-      return instance;
-    }
+    return instance;
+  }
 }

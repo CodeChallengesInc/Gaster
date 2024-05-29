@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import { GameService } from '../services/gameService';
 
-var express = require('express');
-var bodyParser = require('body-parser');
-var router = express.Router();
-var gameService = GameService.getInstance();
+const express = require('express');
+const bodyParser = require('body-parser');
+const router = express.Router();
+const gameService = GameService.getInstance();
 export const GAME_TYPE = +(process.env.GAME_TYPE || 0);
 
 router.use(bodyParser.urlencoded({ extended: false }));
