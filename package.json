@@ -4,7 +4,7 @@
   "description": "The backend for the ants game",
   "main": "app.js",
   "scripts": {
-    "test": "jest --detectOpenHandles",
+    "test": "jest",
     "tsc": "tsc",
     "lint": "eslint --fix --ext .ts .",
     "build": "npm install && npm run tsc",
