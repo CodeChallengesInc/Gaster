@@ -7,4 +7,6 @@ COPY . .
 RUN mkdir /ants
 EXPOSE 3000
 RUN npm run tsc
-CMD ["node", "./build/app.js"]
+RUN ls
+RUN ls build
+CMD ["node", "./build/src/app.js"]
