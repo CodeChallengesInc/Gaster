@@ -183,14 +183,14 @@ describe('LoneAntAnimalGameService', () => {
     expect(ant.error).toBeTruthy();
   });
 
-  it('should set an error on an animal if it returns an numeric color below 1', () => {
+  it('should set an error on an animal if it returns an numeric color below 0', () => {
     mockAnimalLoadingService.loadAnimals.mockReturnValue([new Animal()]);
 
     const game = service.createNewGameBoard();
     const ant = game.board.animals[0];
 
     // Mock the doStep method to return an invalid action
-    ant.doStep = jest.fn().mockReturnValue({ cell: 4, color: 0 });
+    ant.doStep = jest.fn().mockReturnValue({ cell: 4, color: -1 });
 
     service.tickGame(game, 100);
 

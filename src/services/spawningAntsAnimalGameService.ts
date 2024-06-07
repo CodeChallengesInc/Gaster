@@ -106,7 +106,7 @@ export class SpawningAntsAnimalGameService implements AnimalGameService {
       return 'Ant did not return a cell';
     } else if (!Number.isInteger(animalAction.cell) || animalAction.cell < 0 || animalAction.cell > 8) {
       return `Cell number '${animalAction.cell}' is not valid`;
-    } else if (animalAction.color && (!Number.isInteger(animalAction.color) || animalAction.color < 1 || animalAction.color > 8)) {
+    } else if (animalAction.color && (!Number.isInteger(animalAction.color) || animalAction.color < 0 || animalAction.color > 8)) {
       return `Color '${animalAction.color}' is not valid`;
     } else if (boardView.view[animalAction.cell].ant > 0) {
       return 'Ant stepped on another ant!';
