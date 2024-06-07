@@ -4,6 +4,7 @@ import { Animal } from '../models/animal';
 import { Board } from '../models/board';
 import { Game } from '../models/game';
 import { AnimalLoadingService } from './animalLoadingService';
+import { Ant } from '../models/ant';
 
 const FOOD_PERCENTAGE = +(process.env.FOOD_PERCENTAGE || 0.05);
 const loneAntsDirectory = './ants/LoneAnt';
@@ -12,6 +13,9 @@ const GRID_WIDTH = +(process.env.GRID_WIDTH || 200);
 const GRID_HEIGHT = +(process.env.GRID_HEIGHT || 80);
 export const TICKS_PER_SECOND = +(process.env.TICKS_PER_SECOND || 10);
 export const MAX_TICKS = +(process.env.MAX_TICKS || 10000);
+const TEST_GRID_WIDTH = 60;
+const TEST_GRID_HEIGHT = 40;
+const TEST_TICKS_PER_SECOND = 10;
 
 export class LoneAntAnimalGameService implements AnimalGameService {
   private animalLoadingService: AnimalLoadingService;
@@ -54,6 +58,16 @@ export class LoneAntAnimalGameService implements AnimalGameService {
 
     game.intervalId = setInterval(() => this.tickGame(game, gameLength), 1000 / ticksPerSecond);
     return game;
+  }
+
+  createTestGameBoard(name: string, code: string): Game {
+    return this.createGame(
+      [Animal.CreateAnimal(Ant, name, 'Tester', code, 5)],
+      TEST_GRID_WIDTH,
+      TEST_GRID_HEIGHT,
+      TEST_TICKS_PER_SECOND,
+      MAX_TICKS,
+      FOOD_PERCENTAGE);
   }
 
   generateGrid(board: Board, height: number, width: number, foodPercentage: number) {

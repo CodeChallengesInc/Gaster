@@ -7,6 +7,7 @@ const board = require('./controllers/board');
 const gameTypes = require('./controllers/gameTypes');
 const game = require('./controllers/game');
 const gameStatus = require('./controllers/gameStatus');
+const simulation = require('./controllers/simulation');
 
 const port = 3000;
 
@@ -21,6 +22,7 @@ app.use('/board', board);
 app.use('/game', game);
 app.use('/gameTypes', gameTypes);
 app.use('/gameStatus', gameStatus);
+app.use('/test', simulation);
 
 const server = app.listen(port, function() {
   const host = server.address().address;
