@@ -45,6 +45,19 @@ export class GameService {
     return undefined;
   }
 
+  createTestGame(gameType: GameType, animalName: string, code: string): string {
+    const uuidService = require('uuid');
+    const animalGameService = AnimalGameServiceFactory.CreateAnimalGameService(gameType);
+
+    const uuid: string = uuidService.v4();
+    if (animalGameService !== undefined) {
+      this.games.set(uuid, animalGameService.createTestGameBoard(animalName, code));
+      return uuid;
+    }
+    console.error('animalGameService could not be created for gameType: ', GameType[gameType]);
+    return '';
+  }
+
   private stopGame(game: Game) {
     clearInterval(game.intervalId);
   }
