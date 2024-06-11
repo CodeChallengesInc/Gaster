@@ -83,7 +83,7 @@ export class FormicAntsAnimalGameService implements AnimalGameService {
     return game;
   }
 
-  createTestGameBoard(name: string, code: string): Game {
+  createNewSimulation(name: string, code: string): Game {
     return this.createGame(
       [Animal.CreateAnimal(Ant, name, 'Tester', code, 5)],
       TEST_GRID_WIDTH,

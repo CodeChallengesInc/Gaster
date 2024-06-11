@@ -3,10 +3,13 @@ import { LoneAntAnimalGameService } from './loneAntAnimalGameService';
 import { SpawningAntsAnimalGameService } from './spawningAntsAnimalGameService';
 import { FormicAntsAnimalGameService } from './formicAntsAnimalGameService';
 import { AnimalLoadingService } from './animalLoadingService';
+import { Socket } from 'socket.io';
+import { LoneAntSocketAnimalGameService } from './loneAntSocketAnimalGameService';
 
 let loneAntInstance: LoneAntAnimalGameService | undefined;
 let spawningAntsInstance: SpawningAntsAnimalGameService | undefined;
 let formicAntsInstance: FormicAntsAnimalGameService | undefined;
+let loneAntSocketInstance: LoneAntSocketAnimalGameService | undefined;
 
 export class AnimalGameServiceFactory {
   static CreateAnimalGameService(gameType: GameType) {
@@ -29,6 +32,18 @@ export class AnimalGameServiceFactory {
         formicAntsInstance = new FormicAntsAnimalGameService(animalLodingService);
       }
       return formicAntsInstance;
+    }
+    return undefined;
+  }
+
+  static CreateSocketAnimalGameService(gameType: GameType, socket: Socket) {
+    const animalLodingService = new AnimalLoadingService();
+    if (gameType === GameType.LoneAnt) {
+      if (!loneAntSocketInstance) {
+        console.log('Creating new LoneAntAnimalGameService');
+        loneAntSocketInstance = new LoneAntSocketAnimalGameService(animalLodingService, socket);
+      }
+      return loneAntSocketInstance;
     }
     return undefined;
   }
