@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { GameService } from './services/gameService';
 
 const express = require('express');
 const app = express();
@@ -29,3 +30,6 @@ const server = app.listen(port, function() {
   const port = server.address().port;
   console.log('CCI backend listening at http://%s:%s', host, port);
 });
+
+const gameService = GameService.getInstance();
+gameService.initializeSocketServer(server);
